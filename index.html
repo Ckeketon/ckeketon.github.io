@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Watch Party</title>
+</head>
+<body>
+  <h2>Watch Party 🎬</h2>
+
+  <input id="room" placeholder="Назва кімнати">
+  <button onclick="joinRoom()">Join</button>
+
+  <br><br>
+
+  <input id="videoUrl" placeholder="Встав mp4 лінк">
+  <button onclick="setVideo()">Load</button>
+
+  <br><br>
+
+  <video id="video" width="800" controls></video>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+
+  <script src="script.js"></script>
+</body>
+</html>
