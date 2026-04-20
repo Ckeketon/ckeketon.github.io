@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Watch Party</title>
+  <meta charset="UTF-8">
+  <title>Watch Party 🔥</title>
 </head>
 <body>
-  <h2>Watch Party 🎬</h2>
 
-  <input id="room" placeholder="Назва кімнати">
-  <button onclick="joinRoom()">Join</button>
+<h2>Watch Party 🎬</h2>
 
-  <br><br>
+<input id="room" placeholder="Назва кімнати">
+<button onclick="joinRoom()">Join</button>
 
-  <input id="videoUrl" placeholder="Встав mp4 лінк">
-  <button onclick="setVideo()">Load</button>
+<br><br>
 
-  <br><br>
+<input id="videoUrl" placeholder="mp4 або m3u8 лінк">
+<button onclick="setVideo()">Load</button>
 
-  <video id="video" width="800" controls></video>
+<br><br>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+<video id="video" width="800" controls></video>
 
-  <script src="script.js"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js"></script>
+
+<!-- HLS -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script src="script.js"></script>
+
 </body>
 </html>
