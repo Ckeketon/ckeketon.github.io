@@ -1,6 +1,8 @@
+// Імпорт Firebase
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, update, onValue } from "firebase/database";
 
+// ВИПРАВЛЕНИЙ КОНФІГ
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
@@ -12,232 +14,42 @@ const firebaseConfig = {
   measurementId: "G-F629PTYGLJ"
 };
 
+// Ініціалізація
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 let roomRef = null;
-let isUpdating = false;
-let currentVideoType = null;
-let youtubePlayer = null;
 let currentHls = null;
-let currentVideo = null; // для mp4/hls плеєра
+let isUpdating = false;
 
-const roomInput = document.getElementById("room");
-const videoUrlInput = document.getElementById("videoUrl");
-const container = document.getElementById("video-container");
+const video = document.getElementById("video");
 const statusDiv = document.getElementById("status");
 
-function updateStatus(message, type = "info") {
-  statusDiv.textContent = message;
-  statusDiv.className = `status ${type}`;
-  console.log(`[${type}] ${message}`);
-}
-
-// Функція для визначення типу відео
-function getVideoType(url) {
-  if (!url) return null;
-  if (url.includes('youtube.com/watch') || url.includes('youtu.be/') || url.includes('youtube.com/embed')) {
-    return 'youtube';
-  }
-  if (url.includes('.m3u8')) return 'hls';
-  if (url.includes('.mp4') || url.includes('.mkv') || url.includes('.mov')) return 'mp4';
-  return null;
-}
-
-// Отримати YouTube ID
-function getYouTubeId(url) {
-  const patterns = [
-    /(?:youtube\.com\/watch\?v=)([^&]+)/,
-    /(?:youtu\.be\/)([^?]+)/,
-    /(?:youtube\.com\/embed\/)([^?]+)/
-  ];
-  for (const pattern of patterns) {
-    const match = url.match(pattern);
-    if (match) return match[1];
-  }
-  return null;
-}
-
-// Створити YouTube плеєр
-function createYouTubePlayer(videoId, currentTime = 0, isPlaying = false) {
-  container.innerHTML = '<div id="youtube-player" style="width:100%; height:450px;"></div>';
-  
-  if (youtubePlayer && typeof youtubePlayer.destroy === 'function') {
-    youtubePlayer.destroy();
-  }
-  
-  new YT.Player('youtube-player', {
-    height: '450',
-    width: '100%',
-    videoId: videoId,
-    playerVars: {
-      'autoplay': isPlaying ? 1 : 0,
-      'controls': 1,
-      'enablejsapi': 1,
-      'modestbranding': 1,
-      'rel': 0
-    },
-    events: {
-      'onReady': (event) => {
-        youtubePlayer = event.target;
-        if (currentTime > 0) {
-          youtubePlayer.seekTo(currentTime, true);
-        }
-        updateStatus("✅ YouTube плеєр готовий", "success");
-      },
-      'onStateChange': (event) => {
-        if (!roomRef || isUpdating) return;
-        
-        const state = event.data;
-        const time = youtubePlayer.getCurrentTime();
-        
-        if (state === YT.PlayerState.PLAYING) {
-          update(roomRef, { playing: true, time: time });
-        } else if (state === YT.PlayerState.PAUSED) {
-          update(roomRef, { playing: false, time: time });
-        }
-      }
-    }
-  });
-}
-
-// Створити HLS плеєр
-function createHlsPlayer(url, currentTime = 0, isPlaying = false) {
-  container.innerHTML = '<video id="video-player" width="100%" controls style="width:100%; height:450px;"></video>';
-  const video = document.getElementById('video-player');
-  currentVideo = video;
+function loadVideo(url) {
+  if (!url) return;
   
   if (currentHls) {
     currentHls.destroy();
     currentHls = null;
   }
-  
-  currentHls = new Hls();
-  currentHls.loadSource(url);
-  currentHls.attachMedia(video);
-  
-  currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
-    if (currentTime > 0) video.currentTime = currentTime;
-    if (isPlaying) video.play();
-    updateStatus("✅ HLS відео готове", "success");
-  });
-  
-  // Синхронізація
-  video.addEventListener('play', () => {
-    if (roomRef && !isUpdating) {
-      update(roomRef, { playing: true, time: video.currentTime });
-    }
-  });
-  
-  video.addEventListener('pause', () => {
-    if (roomRef && !isUpdating) {
-      update(roomRef, { playing: false, time: video.currentTime });
-    }
-  });
-  
-  video.addEventListener('seeked', () => {
-    if (roomRef && !isUpdating) {
-      update(roomRef, { time: video.currentTime });
-    }
-  });
-}
 
-// Створити MP4 плеєр
-function createMp4Player(url, currentTime = 0, isPlaying = false) {
-  container.innerHTML = '<video id="video-player" width="100%" controls style="width:100%; height:450px;"></video>';
-  const video = document.getElementById('video-player');
-  currentVideo = video;
-  video.src = url;
-  
-  video.addEventListener('loadedmetadata', () => {
-    if (currentTime > 0) video.currentTime = currentTime;
-    if (isPlaying) video.play();
-    updateStatus("✅ MP4 відео готове", "success");
-  });
-  
-  video.addEventListener('play', () => {
-    if (roomRef && !isUpdating) {
-      update(roomRef, { playing: true, time: video.currentTime });
+  if (url.includes('.m3u8')) {
+    if (Hls.isSupported()) {
+      currentHls = new Hls();
+      currentHls.loadSource(url);
+      currentHls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = url;
     }
-  });
-  
-  video.addEventListener('pause', () => {
-    if (roomRef && !isUpdating) {
-      update(roomRef, { playing: false, time: video.currentTime });
-    }
-  });
-  
-  video.addEventListener('seeked', () => {
-    if (roomRef && !isUpdating) {
-      update(roomRef, { time: video.currentTime });
-    }
-  });
-}
-
-// Завантажити відео
-function loadVideo(url, currentTime = 0, isPlaying = false) {
-  if (!url) {
-    updateStatus("⚠️ Немає URL відео", "warning");
-    return;
-  }
-  
-  const type = getVideoType(url);
-  if (!type) {
-    updateStatus("❌ Невідомий тип відео. Спробуйте YouTube або .mp4", "error");
-    return;
-  }
-  
-  currentVideoType = type;
-  updateStatus(`📺 Завантаження ${type.toUpperCase()}...`, "info");
-  
-  if (type === 'youtube') {
-    const videoId = getYouTubeId(url);
-    if (!videoId) {
-      updateStatus("❌ Неправильне YouTube посилання", "error");
-      return;
-    }
-    createYouTubePlayer(videoId, currentTime, isPlaying);
-  } else if (type === 'hls') {
-    createHlsPlayer(url, currentTime, isPlaying);
-  } else if (type === 'mp4') {
-    createMp4Player(url, currentTime, isPlaying);
-  }
-}
-
-// Синхронізація для YouTube
-function syncYouTubePlayer(time, playing) {
-  if (youtubePlayer && typeof youtubePlayer.seekTo === 'function') {
-    if (Math.abs(youtubePlayer.getCurrentTime() - time) > 1) {
-      youtubePlayer.seekTo(time, true);
-    }
-    if (playing && youtubePlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
-      youtubePlayer.playVideo();
-    } else if (!playing && youtubePlayer.getPlayerState() === YT.PlayerState.PLAYING) {
-      youtubePlayer.pauseVideo();
-    }
-  }
-}
-
-// Синхронізація для відео плеєра
-function syncVideoPlayer(time, playing) {
-  const video = document.getElementById('video-player');
-  if (!video) return;
-  
-  if (Math.abs(video.currentTime - time) > 1) {
-    video.currentTime = time;
-  }
-  if (playing) {
-    video.play().catch(e => console.log("Автовідтворення заблоковано"));
   } else {
-    video.pause();
+    video.src = url;
   }
 }
 
-// Приєднання до кімнати
 window.joinRoom = function() {
-  const room = roomInput.value.trim();
+  const room = document.getElementById("room").value;
   if (!room) {
-    updateStatus("❌ Введіть назву кімнати!", "error");
+    alert("Введіть назву кімнати!");
     return;
   }
   
@@ -245,62 +57,74 @@ window.joinRoom = function() {
   
   onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
-    console.log("Отримано дані з Firebase:", data);
+    if (!data) return;
     
-    if (!data) {
-      updateStatus(`📭 Кімната "${room}" порожня. Завантажте відео.`, "warning");
-      return;
-    }
-    
-    updateStatus(`✅ В кімнаті: ${room}`, "success");
     isUpdating = true;
     
-    // Завантажуємо нове відео
-    if (data.video) {
-      loadVideo(data.video, data.time || 0, data.playing || false);
+    if (data.video && video.src !== data.video) {
+      loadVideo(data.video);
     }
     
-    // Синхронізація для поточного плеєра
-    setTimeout(() => {
-      if (currentVideoType === 'youtube') {
-        syncYouTubePlayer(data.time || 0, data.playing || false);
-      } else {
-        syncVideoPlayer(data.time || 0, data.playing || false);
-      }
-      isUpdating = false;
-    }, 500);
+    if (Math.abs(video.currentTime - data.time) > 0.5) {
+      video.currentTime = data.time;
+    }
+    
+    if (data.playing) {
+      video.play().catch(e => {
+        console.log("Автовідтворення заблоковано");
+      });
+    } else {
+      video.pause();
+    }
+    
+    isUpdating = false;
   });
   
-  updateStatus(`✅ Приєднано до кімнати "${room}"`, "success");
+  statusDiv.innerText = `✅ Ви в кімнаті: ${room}`;
+  console.log(`✅ Приєднались до кімнати: ${room}`);
 };
 
-// Встановити відео
 window.setVideo = function() {
   if (!roomRef) {
-    updateStatus("❌ Спочатку приєднайтесь до кімнати (Join)!", "error");
+    alert("Спочатку приєднайтесь до кімнати (Join)!");
     return;
   }
   
-  const url = videoUrlInput.value.trim();
+  const url = document.getElementById("videoUrl").value;
   if (!url) {
-    updateStatus("❌ Вставте посилання на відео!", "error");
+    alert("Вставте посилання на відео!");
     return;
   }
-  
-  updateStatus(`📤 Відправка відео...`, "info");
-  console.log("Відправляємо відео:", url);
   
   set(roomRef, {
     video: url,
     time: 0,
     playing: false
-  }).then(() => {
-    updateStatus("✅ Відео відправлено!", "success");
-  }).catch((error) => {
-    updateStatus(`❌ Помилка: ${error.message}`, "error");
-    console.error("Помилка при відправці:", error);
   });
+  
+  statusDiv.innerText = "📺 Відео встановлено!";
 };
 
-updateStatus("✅ Готово! Введіть кімнату та YouTube посилання", "success");
+video.addEventListener("play", () => {
+  if (roomRef && !isUpdating) {
+    console.log("▶️ Play");
+    update(roomRef, { playing: true, time: video.currentTime });
+  }
+});
+
+video.addEventListener("pause", () => {
+  if (roomRef && !isUpdating) {
+    console.log("⏸️ Pause");
+    update(roomRef, { playing: false, time: video.currentTime });
+  }
+});
+
+video.addEventListener("seeked", () => {
+  if (roomRef && !isUpdating) {
+    console.log("⏩ Seek");
+    update(roomRef, { time: video.currentTime });
+  }
+});
+
 console.log("✅ Watch Party готовий!");
+statusDiv.innerText = "✅ Сайт завантажено! Введіть кімнату.";
