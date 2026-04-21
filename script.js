@@ -1,4 +1,4 @@
-// Імпорт Firebase (сучасний спосіб)
+// Імпорт Firebase
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, update, onValue } from "firebase/database";
 
@@ -19,10 +19,12 @@ const db = getDatabase(app);
 
 let roomRef = null;
 let currentHls = null;
+let isUpdating = false; // Запобігаємо зацикленню
+
 const video = document.getElementById("video");
 const statusDiv = document.getElementById("status");
 
-// Завантаження відео (mp4 або m3u8)
+// Завантаження відео
 function loadVideo(url) {
   if (!url) return;
   
@@ -42,8 +44,6 @@ function loadVideo(url) {
   } else {
     video.src = url;
   }
-  
-  statusDiv.innerText = "✅ Відео завантажено!";
 }
 
 // Приєднання до кімнати
@@ -56,27 +56,35 @@ window.joinRoom = function() {
   
   roomRef = ref(db, "rooms/" + room);
   
-  // Слухаємо зміни
+  // Слухаємо зміни в базі
   onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
     if (!data) return;
     
-    if (data.video) {
+    // Оновлюємо стан відео без зациклення
+    isUpdating = true;
+    
+    // Завантажуємо відео якщо нове
+    if (data.video && video.src !== data.video) {
       loadVideo(data.video);
     }
     
-    if (Math.abs(video.currentTime - (data.time || 0)) > 1) {
-      video.currentTime = data.time || 0;
+    // Синхронізуємо час
+    if (Math.abs(video.currentTime - data.time) > 0.5) {
+      video.currentTime = data.time;
     }
     
+    // Синхронізуємо відтворення/паузу
     if (data.playing) {
       video.play().catch(e => {
-        console.log("Потрібно клікнути по відео для авто відтворення");
+        console.log("Автовідтворення заблоковано");
         statusDiv.innerText = "⚠️ Клікніть по відео для відтворення";
       });
     } else {
       video.pause();
     }
+    
+    isUpdating = false;
   });
   
   statusDiv.innerText = `✅ Ви в кімнаті: ${room}`;
@@ -105,9 +113,9 @@ window.setVideo = function() {
   statusDiv.innerText = "📺 Відео встановлено!";
 };
 
-// Синхронізація подій
+// ВІДПРАВЛЯЄМО ПОДІЇ В БАЗУ (без зациклення)
 video.addEventListener("play", () => {
-  if (roomRef) {
+  if (roomRef && !isUpdating) {
     update(roomRef, { 
       playing: true, 
       time: video.currentTime 
@@ -116,7 +124,7 @@ video.addEventListener("play", () => {
 });
 
 video.addEventListener("pause", () => {
-  if (roomRef) {
+  if (roomRef && !isUpdating) {
     update(roomRef, { 
       playing: false, 
       time: video.currentTime 
@@ -125,10 +133,21 @@ video.addEventListener("pause", () => {
 });
 
 video.addEventListener("seeked", () => {
-  if (roomRef) {
+  if (roomRef && !isUpdating) {
     update(roomRef, { 
       time: video.currentTime 
     });
+  }
+});
+
+// Додатково: синхронізація під час відтворення (кожну секунду)
+video.addEventListener("timeupdate", () => {
+  if (roomRef && !isUpdating && video.playing) {
+    // Оновлюємо час в базі раз на секунду
+    if (Math.abs(video.currentTime - (window._lastSentTime || 0)) > 1) {
+      window._lastSentTime = video.currentTime;
+      update(roomRef, { time: video.currentTime });
+    }
   }
 });
 
