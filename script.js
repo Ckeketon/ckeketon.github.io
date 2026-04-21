@@ -20,6 +20,7 @@ let isUpdating = false;
 let currentVideoType = null;
 let youtubePlayer = null;
 let currentHls = null;
+let currentVideo = null; // для mp4/hls плеєра
 
 const roomInput = document.getElementById("room");
 const videoUrlInput = document.getElementById("videoUrl");
@@ -59,9 +60,9 @@ function getYouTubeId(url) {
 
 // Створити YouTube плеєр
 function createYouTubePlayer(videoId, currentTime = 0, isPlaying = false) {
-  container.innerHTML = '<div id="youtube-player"></div>';
+  container.innerHTML = '<div id="youtube-player" style="width:100%; height:450px;"></div>';
   
-  if (youtubePlayer) {
+  if (youtubePlayer && typeof youtubePlayer.destroy === 'function') {
     youtubePlayer.destroy();
   }
   
@@ -102,8 +103,9 @@ function createYouTubePlayer(videoId, currentTime = 0, isPlaying = false) {
 
 // Створити HLS плеєр
 function createHlsPlayer(url, currentTime = 0, isPlaying = false) {
-  container.innerHTML = '<video id="video-player" width="100%" controls></video>';
+  container.innerHTML = '<video id="video-player" width="100%" controls style="width:100%; height:450px;"></video>';
   const video = document.getElementById('video-player');
+  currentVideo = video;
   
   if (currentHls) {
     currentHls.destroy();
@@ -117,6 +119,7 @@ function createHlsPlayer(url, currentTime = 0, isPlaying = false) {
   currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
     if (currentTime > 0) video.currentTime = currentTime;
     if (isPlaying) video.play();
+    updateStatus("✅ HLS відео готове", "success");
   });
   
   // Синхронізація
@@ -141,12 +144,16 @@ function createHlsPlayer(url, currentTime = 0, isPlaying = false) {
 
 // Створити MP4 плеєр
 function createMp4Player(url, currentTime = 0, isPlaying = false) {
-  container.innerHTML = '<video id="video-player" width="100%" controls></video>';
+  container.innerHTML = '<video id="video-player" width="100%" controls style="width:100%; height:450px;"></video>';
   const video = document.getElementById('video-player');
+  currentVideo = video;
   video.src = url;
   
-  if (currentTime > 0) video.currentTime = currentTime;
-  if (isPlaying) video.play();
+  video.addEventListener('loadedmetadata', () => {
+    if (currentTime > 0) video.currentTime = currentTime;
+    if (isPlaying) video.play();
+    updateStatus("✅ MP4 відео готове", "success");
+  });
   
   video.addEventListener('play', () => {
     if (roomRef && !isUpdating) {
@@ -169,6 +176,11 @@ function createMp4Player(url, currentTime = 0, isPlaying = false) {
 
 // Завантажити відео
 function loadVideo(url, currentTime = 0, isPlaying = false) {
+  if (!url) {
+    updateStatus("⚠️ Немає URL відео", "warning");
+    return;
+  }
+  
   const type = getVideoType(url);
   if (!type) {
     updateStatus("❌ Невідомий тип відео. Спробуйте YouTube або .mp4", "error");
@@ -233,8 +245,10 @@ window.joinRoom = function() {
   
   onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
+    console.log("Отримано дані з Firebase:", data);
+    
     if (!data) {
-      updateStatus(`📭 Кімната "${room}" порожня`, "warning");
+      updateStatus(`📭 Кімната "${room}" порожня. Завантажте відео.`, "warning");
       return;
     }
     
@@ -257,23 +271,24 @@ window.joinRoom = function() {
     }, 500);
   });
   
-  updateStatus(`✅ Приєднано до "${room}"`, "success");
+  updateStatus(`✅ Приєднано до кімнати "${room}"`, "success");
 };
 
 // Встановити відео
 window.setVideo = function() {
   if (!roomRef) {
-    updateStatus("❌ Спочатку Join!", "error");
+    updateStatus("❌ Спочатку приєднайтесь до кімнати (Join)!", "error");
     return;
   }
   
   const url = videoUrlInput.value.trim();
   if (!url) {
-    updateStatus("❌ Вставте посилання!", "error");
+    updateStatus("❌ Вставте посилання на відео!", "error");
     return;
   }
   
-  updateStatus(`📤 Відправка...`, "info");
+  updateStatus(`📤 Відправка відео...`, "info");
+  console.log("Відправляємо відео:", url);
   
   set(roomRef, {
     video: url,
@@ -283,7 +298,9 @@ window.setVideo = function() {
     updateStatus("✅ Відео відправлено!", "success");
   }).catch((error) => {
     updateStatus(`❌ Помилка: ${error.message}`, "error");
+    console.error("Помилка при відправці:", error);
   });
 };
 
 updateStatus("✅ Готово! Введіть кімнату та YouTube посилання", "success");
+console.log("✅ Watch Party готовий!");
