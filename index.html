@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Watch Party 🎬</title>
   <style>
     body { font-family: Arial; padding: 20px; background: #1a1a1a; color: white; text-align: center; }
@@ -9,51 +10,168 @@
     input { background: #333; color: white; border: 1px solid #555; width: 250px; }
     button { background: #e50914; color: white; border: none; cursor: pointer; }
     button:hover { background: #f6121d; }
-    video { max-width: 90%; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-    .info { margin-top: 20px; padding: 10px; background: #333; border-radius: 5px; display: inline-block; font-size: 14px; }
-    .status { color: #4caf50; margin-top: 10px; }
+    video { max-width: 90%; margin-top: 20px; border-radius: 8px; background: black; max-height: 400px; }
+    .info { margin-top: 20px; padding: 10px; background: #333; border-radius: 5px; font-size: 12px; }
+    .status { margin-top: 10px; padding: 10px; border-radius: 5px; }
+    .success { background: #4caf50; color: white; }
+    .error { background: #f44336; color: white; }
+    .warning { background: #ff9800; color: white; }
+    .info { background: #2196f3; color: white; }
   </style>
 </head>
 <body>
 
-<h2>🎬 Watch Party - Спільний перегляд</h2>
+<h2>🎬 Watch Party</h2>
 
-<input id="room" placeholder="Назва кімнати (наприклад: film1)">
+<input id="room" placeholder="Назва кімнати">
 <button onclick="joinRoom()">Join</button>
 
 <br><br>
 
-<input id="videoUrl" placeholder="Встав посилання на .mp4 або .m3u8" style="width: 400px;">
+<input id="videoUrl" placeholder="Посилання на .mp4 відео" style="width: 400px;">
 <button onclick="setVideo()">Load</button>
 
 <br>
 
 <video id="video" width="800" controls></video>
 
+<div id="status" class="status info">🟡 Готовий до роботи</div>
 <div class="info">
-  💡 Інструкція:<br>
-  1️⃣ Введіть назву кімнати → Join<br>
-  2️⃣ Вставте посилання на відео → Load<br>
-  3️⃣ Дайте другу URL вашого сайту та назву кімнати<br>
-  4️⃣ Все синхронізується автоматично!
+  📺 Тестове відео: https://www.w3schools.com/html/mov_bbb.mp4
 </div>
-<div id="status" class="status"></div>
 
-<!-- Firebase v12 (сучасна версія) -->
-<script type="importmap">
-  {
-    "imports": {
-      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
-      "firebase/database": "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"
-    }
+<!-- Firebase v8 (стабільна) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+// КОНФІГ FIREBASE (ваш)
+const firebaseConfig = {
+  apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
+  authDomain: "watch2-7672f.firebaseapp.com",
+  databaseURL: "https://watch2-7672f-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "watch2-7672f",
+  storageBucket: "watch2-7672f.firebasestorage.app",
+  messagingSenderId: "535788651838",
+  appId: "1:535788651838:web:a77c7989426e4697a1586f"
+};
+
+// Ініціалізація
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+let roomRef = null;
+let isUpdating = false;
+const video = document.getElementById("video");
+const statusDiv = document.getElementById("status");
+
+function updateStatus(message, type = "info") {
+  statusDiv.textContent = message;
+  statusDiv.className = `status ${type}`;
+  console.log(`[${type}] ${message}`);
+}
+
+// Приєднання до кімнати
+window.joinRoom = function() {
+  const room = document.getElementById("room").value.trim();
+  if (!room) {
+    updateStatus("❌ Введіть назву кімнати!", "error");
+    return;
   }
+  
+  if (roomRef) {
+    roomRef.off();
+  }
+  
+  roomRef = db.ref("rooms/" + room);
+  
+  roomRef.on("value", (snapshot) => {
+    const data = snapshot.val();
+    console.log("Отримано:", data);
+    
+    if (!data) {
+      updateStatus(`📭 Кімната "${room}" порожня`, "warning");
+      return;
+    }
+    
+    updateStatus(`✅ В кімнаті: ${room}`, "success");
+    isUpdating = true;
+    
+    // Завантажуємо відео
+    if (data.video && video.src !== data.video) {
+      video.src = data.video;
+      video.load();
+      updateStatus("📺 Відео завантажено", "success");
+    }
+    
+    // Синхронізація часу
+    if (data.time !== undefined && Math.abs(video.currentTime - data.time) > 1) {
+      video.currentTime = data.time;
+    }
+    
+    // Синхронізація відтворення
+    if (data.playing) {
+      video.play().catch(e => updateStatus("⚠️ Натисніть Play", "warning"));
+    } else {
+      video.pause();
+    }
+    
+    isUpdating = false;
+  });
+  
+  updateStatus(`✅ Приєднано до "${room}"`, "success");
+};
+
+// Встановити відео
+window.setVideo = function() {
+  if (!roomRef) {
+    updateStatus("❌ Спочатку Join!", "error");
+    return;
+  }
+  
+  const url = document.getElementById("videoUrl").value.trim();
+  if (!url) {
+    updateStatus("❌ Вставте посилання!", "error");
+    return;
+  }
+  
+  updateStatus("📤 Відправка...", "info");
+  
+  roomRef.set({
+    video: url,
+    time: 0,
+    playing: false
+  }).then(() => {
+    updateStatus("✅ Відео відправлено!", "success");
+  }).catch((error) => {
+    updateStatus(`❌ Помилка: ${error.message}`, "error");
+  });
+};
+
+// Синхронізація подій
+video.addEventListener("play", () => {
+  if (roomRef && !isUpdating) {
+    roomRef.update({ playing: true, time: video.currentTime });
+    console.log("▶️ Play");
+  }
+});
+
+video.addEventListener("pause", () => {
+  if (roomRef && !isUpdating) {
+    roomRef.update({ playing: false, time: video.currentTime });
+    console.log("⏸️ Pause");
+  }
+});
+
+video.addEventListener("seeked", () => {
+  if (roomRef && !isUpdating) {
+    roomRef.update({ time: video.currentTime });
+    console.log("⏩ Seek");
+  }
+});
+
+updateStatus("✅ Готово! Введіть кімнату", "success");
 </script>
-
-<!-- HLS підтримка для m3u8 -->
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-
-<!-- Основний код -->
-<script type="module" src="script.js"></script>
 
 </body>
 </html>
