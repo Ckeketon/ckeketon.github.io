@@ -2,50 +2,352 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watch Party 🎬</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Watch Party — дивись разом</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    body { font-family: Arial; padding: 20px; background: #1a1a1a; color: white; text-align: center; }
-    input, button { padding: 10px; margin: 5px; font-size: 16px; border-radius: 5px; }
-    input { background: #333; color: white; border: 1px solid #555; width: 250px; }
-    button { background: #e50914; color: white; border: none; cursor: pointer; }
-    button:hover { background: #f6121d; }
-    video { max-width: 90%; margin-top: 20px; border-radius: 8px; background: black; max-height: 400px; }
-    .info { margin-top: 20px; padding: 10px; background: #333; border-radius: 5px; font-size: 12px; }
-    .status { margin-top: 10px; padding: 10px; border-radius: 5px; }
-    .success { background: #4caf50; color: white; }
-    .error { background: #f44336; color: white; }
-    .warning { background: #ff9800; color: white; }
-    .info { background: #2196f3; color: white; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      min-height: 100vh;
+      color: white;
+    }
+
+    /* Анімований фон */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-animation span {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 6s infinite linear;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .header h1 {
+      font-size: 3rem;
+      background: linear-gradient(135deg, #fff, #e50914);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      color: #e50914;
+      font-size: 1.3rem;
+    }
+
+    /* Inputs */
+    .input-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      flex: 1;
+      padding: 12px 18px;
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #e50914;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #e50914, #ff4757);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Video Container */
+    .video-wrapper {
+      position: relative;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    video {
+      width: 100%;
+      display: block;
+      background: black;
+    }
+
+    /* Status */
+    .status {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status i {
+      font-size: 1.1rem;
+    }
+
+    .status.success {
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid #4caf50;
+      color: #4caf50;
+    }
+
+    .status.error {
+      background: rgba(244, 67, 54, 0.2);
+      border: 1px solid #f44336;
+      color: #f44336;
+    }
+
+    .status.warning {
+      background: rgba(255, 152, 0, 0.2);
+      border: 1px solid #ff9800;
+      color: #ff9800;
+    }
+
+    .status.info {
+      background: rgba(33, 150, 243, 0.2);
+      border: 1px solid #2196f3;
+      color: #2196f3;
+    }
+
+    /* Info Box */
+    .info-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .info-box i {
+      margin: 0 5px;
+    }
+
+    /* Room badge */
+    .room-badge {
+      display: inline-block;
+      background: rgba(229, 9, 20, 0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #e50914;
+      margin-top: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 2rem; }
+      .input-group { flex-direction: column; }
+      .btn { justify-content: center; }
+      .card { padding: 15px; }
+    }
   </style>
 </head>
 <body>
 
-<h2>🎬 Watch Party</h2>
+<div class="bg-animation" id="bgAnimation"></div>
 
-<input id="room" placeholder="Назва кімнати">
-<button onclick="joinRoom()">Join</button>
+<div class="container">
+  <div class="header">
+    <h1><i class="fas fa-film"></i> Watch Party</h1>
+    <p>Дивись фільми та серіали разом з друзями</p>
+  </div>
 
-<br><br>
+  <div class="card">
+    <div class="card-title">
+      <i class="fas fa-door-open"></i>
+      <span>Кімната</span>
+    </div>
+    <div class="input-group">
+      <input type="text" id="room" placeholder="Назва кімнати (наприклад: anime-night)">
+      <button class="btn btn-primary" onclick="joinRoom()">
+        <i class="fas fa-sign-in-alt"></i> Join
+      </button>
+    </div>
+    <div id="roomDisplay" class="room-badge" style="display: none;"></div>
+  </div>
 
-<input id="videoUrl" placeholder="Посилання на .mp4 відео" style="width: 400px;">
-<button onclick="setVideo()">Load</button>
+  <div class="card">
+    <div class="card-title">
+      <i class="fas fa-link"></i>
+      <span>Відео</span>
+    </div>
+    <div class="input-group">
+      <input type="text" id="videoUrl" placeholder="Посилання на .mp4 відео">
+      <button class="btn btn-primary" onclick="setVideo()">
+        <i class="fas fa-play"></i> Load
+      </button>
+    </div>
+  </div>
 
-<br>
+  <div class="video-wrapper">
+    <video id="video" controls></video>
+  </div>
 
-<video id="video" width="800" controls></video>
+  <div id="status" class="status info">
+    <i class="fas fa-info-circle"></i>
+    <span>Готовий до роботи</span>
+  </div>
 
-<div id="status" class="status info">🟡 Готовий до роботи</div>
-<div class="info">
-  📺 Тестове відео: https://www.w3schools.com/html/mov_bbb.mp4
+  <div class="info-box">
+    <i class="fas fa-users"></i> 1️⃣ Введіть назву кімнати → Join &nbsp;&nbsp;|&nbsp;&nbsp;
+    <i class="fas fa-video"></i> 2️⃣ Вставте .mp4 посилання → Load &nbsp;&nbsp;|&nbsp;&nbsp;
+    <i class="fas fa-share-alt"></i> 3️⃣ Дайте другу URL та назву кімнати
+    <br><br>
+    <i class="fas fa-flask"></i> Тестове відео: 
+    <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 6px;">https://www.w3schools.com/html/mov_bbb.mp4</code>
+  </div>
 </div>
 
-<!-- Firebase v8 (стабільна) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// КОНФІГ FIREBASE (ваш)
+// Анімація фону
+function createStars() {
+  const bg = document.getElementById('bgAnimation');
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('span');
+    star.style.left = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 6 + 's';
+    star.style.animationDuration = 3 + Math.random() * 4 + 's';
+    star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+    bg.appendChild(star);
+  }
+}
+createStars();
+
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
@@ -56,7 +358,6 @@ const firebaseConfig = {
   appId: "1:535788651838:web:a77c7989426e4697a1586f"
 };
 
-// Ініціалізація
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
@@ -64,24 +365,28 @@ let roomRef = null;
 let isUpdating = false;
 const video = document.getElementById("video");
 const statusDiv = document.getElementById("status");
+const roomDisplay = document.getElementById("roomDisplay");
 
 function updateStatus(message, type = "info") {
-  statusDiv.textContent = message;
+  const icon = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
+  };
+  statusDiv.innerHTML = `<i class="fas ${icon[type]}"></i><span>${message}</span>`;
   statusDiv.className = `status ${type}`;
   console.log(`[${type}] ${message}`);
 }
 
-// Приєднання до кімнати
 window.joinRoom = function() {
   const room = document.getElementById("room").value.trim();
   if (!room) {
-    updateStatus("❌ Введіть назву кімнати!", "error");
+    updateStatus("Введіть назву кімнати!", "error");
     return;
   }
   
-  if (roomRef) {
-    roomRef.off();
-  }
+  if (roomRef) roomRef.off();
   
   roomRef = db.ref("rooms/" + room);
   
@@ -90,28 +395,27 @@ window.joinRoom = function() {
     console.log("Отримано:", data);
     
     if (!data) {
-      updateStatus(`📭 Кімната "${room}" порожня`, "warning");
+      updateStatus(`Кімната "${room}" порожня. Завантажте відео.`, "warning");
       return;
     }
     
-    updateStatus(`✅ В кімнаті: ${room}`, "success");
+    updateStatus(`В кімнаті: ${room}`, "success");
+    roomDisplay.style.display = "inline-block";
+    roomDisplay.innerHTML = `<i class="fas fa-hashtag"></i> ${room}`;
     isUpdating = true;
     
-    // Завантажуємо відео
     if (data.video && video.src !== data.video) {
       video.src = data.video;
       video.load();
-      updateStatus("📺 Відео завантажено", "success");
+      updateStatus("Відео завантажено", "success");
     }
     
-    // Синхронізація часу
     if (data.time !== undefined && Math.abs(video.currentTime - data.time) > 1) {
       video.currentTime = data.time;
     }
     
-    // Синхронізація відтворення
     if (data.playing) {
-      video.play().catch(e => updateStatus("⚠️ Натисніть Play", "warning"));
+      video.play().catch(() => updateStatus("Натисніть Play на відео", "warning"));
     } else {
       video.pause();
     }
@@ -119,58 +423,53 @@ window.joinRoom = function() {
     isUpdating = false;
   });
   
-  updateStatus(`✅ Приєднано до "${room}"`, "success");
+  updateStatus(`Приєднано до "${room}"`, "success");
 };
 
-// Встановити відео
 window.setVideo = function() {
   if (!roomRef) {
-    updateStatus("❌ Спочатку Join!", "error");
+    updateStatus("Спочатку натисніть Join!", "error");
     return;
   }
   
   const url = document.getElementById("videoUrl").value.trim();
   if (!url) {
-    updateStatus("❌ Вставте посилання!", "error");
+    updateStatus("Вставте посилання на відео!", "error");
     return;
   }
   
-  updateStatus("📤 Відправка...", "info");
+  updateStatus("Відправка...", "info");
   
   roomRef.set({
     video: url,
     time: 0,
     playing: false
   }).then(() => {
-    updateStatus("✅ Відео відправлено!", "success");
+    updateStatus("Відео відправлено!", "success");
   }).catch((error) => {
-    updateStatus(`❌ Помилка: ${error.message}`, "error");
+    updateStatus(`Помилка: ${error.message}`, "error");
   });
 };
 
-// Синхронізація подій
 video.addEventListener("play", () => {
   if (roomRef && !isUpdating) {
     roomRef.update({ playing: true, time: video.currentTime });
-    console.log("▶️ Play");
   }
 });
 
 video.addEventListener("pause", () => {
   if (roomRef && !isUpdating) {
     roomRef.update({ playing: false, time: video.currentTime });
-    console.log("⏸️ Pause");
   }
 });
 
 video.addEventListener("seeked", () => {
   if (roomRef && !isUpdating) {
     roomRef.update({ time: video.currentTime });
-    console.log("⏩ Seek");
   }
 });
 
-updateStatus("✅ Готово! Введіть кімнату", "success");
+updateStatus("Готово! Введіть кімнату", "success");
 </script>
 
 </body>
