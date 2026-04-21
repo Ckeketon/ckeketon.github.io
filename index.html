@@ -4,19 +4,21 @@
   <meta charset="UTF-8">
   <title>Watch Party 🎬</title>
   <style>
-    body { font-family: Arial; padding: 20px; background: #1a1a1a; color: white; }
-    input, button { padding: 10px; margin: 5px; font-size: 16px; }
-    input { background: #333; color: white; border: 1px solid #555; }
+    body { font-family: Arial; padding: 20px; background: #1a1a1a; color: white; text-align: center; }
+    input, button { padding: 10px; margin: 5px; font-size: 16px; border-radius: 5px; }
+    input { background: #333; color: white; border: 1px solid #555; width: 250px; }
     button { background: #e50914; color: white; border: none; cursor: pointer; }
     button:hover { background: #f6121d; }
-    video { max-width: 100%; margin-top: 20px; border-radius: 8px; }
+    video { max-width: 90%; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .info { margin-top: 20px; padding: 10px; background: #333; border-radius: 5px; display: inline-block; font-size: 14px; }
+    .status { color: #4caf50; margin-top: 10px; }
   </style>
 </head>
 <body>
 
 <h2>🎬 Watch Party - Спільний перегляд</h2>
 
-<input id="room" placeholder="Назва кімнати (наприклад: film1)" style="width: 200px;">
+<input id="room" placeholder="Назва кімнати (наприклад: film1)">
 <button onclick="joinRoom()">Join</button>
 
 <br><br>
@@ -28,14 +30,30 @@
 
 <video id="video" width="800" controls></video>
 
-<!-- ✅ ВИКОРИСТОВУЄМО СТАРУ ВЕРСІЮ FIREBASE (8.10.1) -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<div class="info">
+  💡 Інструкція:<br>
+  1️⃣ Введіть назву кімнати → Join<br>
+  2️⃣ Вставте посилання на відео → Load<br>
+  3️⃣ Дайте другу URL вашого сайту та назву кімнати<br>
+  4️⃣ Все синхронізується автоматично!
+</div>
+<div id="status" class="status"></div>
 
-<!-- HLS підтримка для .m3u8 -->
+<!-- Firebase v12 (сучасна версія) -->
+<script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js",
+      "firebase/database": "https://www.gstatic.com/firebasejs/12.12.1/firebase-database.js"
+    }
+  }
+</script>
+
+<!-- HLS підтримка для m3u8 -->
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
-<script src="script.js"></script>
+<!-- Основний код -->
+<script type="module" src="script.js"></script>
 
 </body>
 </html>
