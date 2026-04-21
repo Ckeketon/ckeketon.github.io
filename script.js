@@ -2,10 +2,11 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, update, onValue } from "firebase/database";
 
-// ВАШ КОНФІГ FIREBASE
+// ВАШ КОНФІГ FIREBASE (виправлений)
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
+  databaseURL: "https://watch2-7672f-default-rtdb.europe-west1.firebasedatabase.app", // 🔥 ДОДАНО правильний URL
   projectId: "watch2-7672f",
   storageBucket: "watch2-7672f.firebasestorage.app",
   messagingSenderId: "535788651838",
@@ -19,7 +20,7 @@ const db = getDatabase(app);
 
 let roomRef = null;
 let currentHls = null;
-let isUpdating = false; // Запобігаємо зацикленню
+let isUpdating = false;
 
 const video = document.getElementById("video");
 const statusDiv = document.getElementById("status");
@@ -61,7 +62,6 @@ window.joinRoom = function() {
     const data = snapshot.val();
     if (!data) return;
     
-    // Оновлюємо стан відео без зациклення
     isUpdating = true;
     
     // Завантажуємо відео якщо нове
@@ -88,7 +88,7 @@ window.joinRoom = function() {
   });
   
   statusDiv.innerText = `✅ Ви в кімнаті: ${room}`;
-  alert(`✅ Ви в кімнаті: ${room}\nДайте другу цю назву!`);
+  console.log(`✅ Приєднались до кімнати: ${room}`);
 };
 
 // Встановити відео
@@ -111,11 +111,13 @@ window.setVideo = function() {
   });
   
   statusDiv.innerText = "📺 Відео встановлено!";
+  console.log("✅ Відео встановлено:", url);
 };
 
-// ВІДПРАВЛЯЄМО ПОДІЇ В БАЗУ (без зациклення)
+// ВІДПРАВЛЯЄМО ПОДІЇ В БАЗУ
 video.addEventListener("play", () => {
   if (roomRef && !isUpdating) {
+    console.log("▶️ Play, час:", video.currentTime);
     update(roomRef, { 
       playing: true, 
       time: video.currentTime 
@@ -125,6 +127,7 @@ video.addEventListener("play", () => {
 
 video.addEventListener("pause", () => {
   if (roomRef && !isUpdating) {
+    console.log("⏸️ Pause, час:", video.currentTime);
     update(roomRef, { 
       playing: false, 
       time: video.currentTime 
@@ -134,20 +137,10 @@ video.addEventListener("pause", () => {
 
 video.addEventListener("seeked", () => {
   if (roomRef && !isUpdating) {
+    console.log("⏩ Seek, час:", video.currentTime);
     update(roomRef, { 
       time: video.currentTime 
     });
-  }
-});
-
-// Додатково: синхронізація під час відтворення (кожну секунду)
-video.addEventListener("timeupdate", () => {
-  if (roomRef && !isUpdating && video.playing) {
-    // Оновлюємо час в базі раз на секунду
-    if (Math.abs(video.currentTime - (window._lastSentTime || 0)) > 1) {
-      window._lastSentTime = video.currentTime;
-      update(roomRef, { time: video.currentTime });
-    }
   }
 });
 
