@@ -1,17 +1,34 @@
-// КОНФІГ FIREBASE (ваш)
+// ===== ВАЖЛИВО: ВСТАВТЕ СЮДИ ВАШ URL З FIREBASE =====
+// Він має виглядати так: https://watch2-7672f-default-rtdb.europe-west1.firebasedatabase.app
+
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
-  databaseURL: "https://watch2-7672f-default-rtdb.europe-west1.firebasedatabase.app",
+ databaseURL: "https://watch2-7672f-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "watch2-7672f",
   storageBucket: "watch2-7672f.firebasestorage.app",
   messagingSenderId: "535788651838",
   appId: "1:535788651838:web:a77c7989426e4697a1586f"
 };
 
+// Перевірка підключення
+console.log("Підключення до:", firebaseConfig.databaseURL);
+
 // Ініціалізація
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
+
+// Перевірка підключення
+const connectedRef = firebase.database().ref(".info/connected");
+connectedRef.on("value", (snap) => {
+  if (snap.val() === true) {
+    console.log("✅ Підключено до Firebase!");
+    updateStatus("✅ Підключено до Firebase!", "success");
+  } else {
+    console.log("❌ Немає підключення до Firebase");
+    updateStatus("❌ Немає підключення до Firebase!", "error");
+  }
+});
 
 let roomRef = null;
 let isUpdating = false;
@@ -40,10 +57,10 @@ window.joinRoom = function() {
   
   roomRef.on("value", (snapshot) => {
     const data = snapshot.val();
-    console.log("Отримано:", data);
+    console.log("Отримано з Firebase:", data);
     
     if (!data) {
-      updateStatus(`📭 Кімната "${room}" порожня`, "warning");
+      updateStatus(`📭 Кімната "${room}" порожня. Завантажте відео.`, "warning");
       return;
     }
     
@@ -60,16 +77,20 @@ window.joinRoom = function() {
     // Синхронізація часу
     if (data.time !== undefined && Math.abs(video.currentTime - data.time) > 1) {
       video.currentTime = data.time;
+      console.log("Синхронізація часу:", data.time);
     }
     
     // Синхронізація відтворення
     if (data.playing) {
-      video.play().catch(e => updateStatus("⚠️ Натисніть Play", "warning"));
+      video.play().catch(e => updateStatus("⚠️ Натисніть Play на відео", "warning"));
     } else {
       video.pause();
     }
     
     isUpdating = false;
+  }, (error) => {
+    console.error("Помилка бази:", error);
+    updateStatus(`❌ Помилка: ${error.message}`, "error");
   });
   
   updateStatus(`✅ Приєднано до "${room}"`, "success");
@@ -78,17 +99,18 @@ window.joinRoom = function() {
 // Встановити відео
 window.setVideo = function() {
   if (!roomRef) {
-    updateStatus("❌ Спочатку Join!", "error");
+    updateStatus("❌ Спочатку натисніть Join!", "error");
     return;
   }
   
   const url = document.getElementById("videoUrl").value.trim();
   if (!url) {
-    updateStatus("❌ Вставте посилання!", "error");
+    updateStatus("❌ Вставте посилання на відео!", "error");
     return;
   }
   
-  updateStatus("📤 Відправка...", "info");
+  updateStatus("📤 Відправка в Firebase...", "info");
+  console.log("Відправляємо:", url);
   
   roomRef.set({
     video: url,
@@ -96,30 +118,32 @@ window.setVideo = function() {
     playing: false
   }).then(() => {
     updateStatus("✅ Відео відправлено!", "success");
+    console.log("✅ Відео збережено в Firebase");
   }).catch((error) => {
     updateStatus(`❌ Помилка: ${error.message}`, "error");
+    console.error("Помилка при збереженні:", error);
   });
 };
 
 // Синхронізація подій
 video.addEventListener("play", () => {
   if (roomRef && !isUpdating) {
+    console.log("▶️ Play, час:", video.currentTime);
     roomRef.update({ playing: true, time: video.currentTime });
-    console.log("▶️ Play");
   }
 });
 
 video.addEventListener("pause", () => {
   if (roomRef && !isUpdating) {
+    console.log("⏸️ Pause, час:", video.currentTime);
     roomRef.update({ playing: false, time: video.currentTime });
-    console.log("⏸️ Pause");
   }
 });
 
 video.addEventListener("seeked", () => {
   if (roomRef && !isUpdating) {
+    console.log("⏩ Перемотка на:", video.currentTime);
     roomRef.update({ time: video.currentTime });
-    console.log("⏩ Seek");
   }
 });
 
