@@ -59,7 +59,7 @@
     .container {
       position: relative;
       z-index: 1;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 20px;
     }
@@ -89,48 +89,34 @@
       font-size: 1rem;
     }
 
-    /* Grid Layout */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 20px;
-    }
-
-    @media (max-width: 968px) {
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
     /* Cards */
     .card {
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(10px);
       border-radius: 20px;
-      padding: 20px;
+      padding: 25px;
       margin-bottom: 20px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-5px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
     .card-title {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: 600;
       margin-bottom: 15px;
       display: flex;
       align-items: center;
       gap: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .card-title i {
       color: #e50914;
+      font-size: 1.3rem;
     }
 
     /* Inputs */
@@ -140,7 +126,7 @@
       flex-wrap: wrap;
     }
 
-    input, select {
+    input {
       flex: 1;
       padding: 12px 18px;
       font-size: 1rem;
@@ -152,7 +138,7 @@
       font-family: 'Inter', sans-serif;
     }
 
-    input:focus, select:focus {
+    input:focus {
       outline: none;
       border-color: #e50914;
       background: rgba(255, 255, 255, 0.15);
@@ -224,6 +210,10 @@
       gap: 10px;
     }
 
+    .status i {
+      font-size: 1.1rem;
+    }
+
     .status.success {
       background: rgba(76, 175, 80, 0.2);
       border: 1px solid #4caf50;
@@ -248,143 +238,22 @@
       color: #2196f3;
     }
 
-    /* Чат */
-    .chat-container {
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .chat-message {
-      display: flex;
-      gap: 10px;
-      align-items: flex-start;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .chat-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #e50914, #ff4757);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-
-    .chat-bubble {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.1);
+    /* Info Box */
+    .info-box {
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 12px;
-      padding: 8px 12px;
-    }
-
-    .chat-name {
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #e50914;
-      margin-bottom: 4px;
-    }
-
-    .chat-text {
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.9);
-      word-break: break-word;
-    }
-
-    .chat-time {
-      font-size: 0.7rem;
-      color: rgba(255, 255, 255, 0.4);
-      margin-top: 4px;
-      text-align: right;
-    }
-
-    .chat-input-area {
       padding: 15px;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      gap: 10px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
     }
 
-    .chat-input-area input {
-      flex: 1;
-      margin: 0;
+    .info-box i {
+      margin: 0 5px;
     }
 
-    /* Список глядачів */
-    .viewers-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      max-height: 200px;
-      overflow-y: auto;
-    }
-
-    .viewer-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-      transition: all 0.3s;
-    }
-
-    .viewer-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .viewer-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #e50914, #ff4757);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 16px;
-    }
-
-    .viewer-info {
-      flex: 1;
-    }
-
-    .viewer-name {
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .viewer-status {
-      font-size: 0.7rem;
-      color: #4caf50;
-    }
-
-    .viewer-status i {
-      font-size: 0.6rem;
-    }
-
+    /* Room badge */
     .room-badge {
       display: inline-block;
       background: rgba(229, 9, 20, 0.2);
@@ -395,35 +264,12 @@
       margin-top: 10px;
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #e50914;
-      border-radius: 10px;
-    }
-
-    .profile-section {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .profile-section select {
-      flex: 1;
-    }
-
+    /* Responsive */
     @media (max-width: 768px) {
       .header h1 { font-size: 2rem; }
       .input-group { flex-direction: column; }
       .btn { justify-content: center; }
+      .card { padding: 15px; }
     }
   </style>
 </head>
@@ -434,103 +280,52 @@
 <div class="container">
   <div class="header">
     <h1><i class="fas fa-film"></i> Watch Party</h1>
-    <p>Дивись фільми та спілкуйся з друзями</p>
+    <p>Дивись фільми та серіали разом з друзями</p>
   </div>
 
-  <div class="main-grid">
-    <!-- Ліва колонка - Відео -->
-    <div>
-      <div class="card">
-        <div class="card-title">
-          <i class="fas fa-door-open"></i>
-          <span>Кімната</span>
-        </div>
-        <div class="profile-section">
-          <select id="avatarSelect">
-            <option value="😀">😀 Веселий</option>
-            <option value="😎">😎 Крутий</option>
-            <option value="🥷">🥷 Ніндзя</option>
-            <option value="🐱">🐱 Кіт</option>
-            <option value="🐉">🐉 Дракон</option>
-            <option value="🍕">🍕 Піца</option>
-            <option value="🎮">🎮 Геймер</option>
-            <option value="📺">📺 Кіноман</option>
-          </select>
-          <input type="text" id="nickname" placeholder="Ваше ім'я" maxlength="20">
-        </div>
-        <div class="input-group">
-          <input type="text" id="room" placeholder="Назва кімнати (наприклад: anime-night)">
-          <button class="btn btn-primary" onclick="joinRoom()">
-            <i class="fas fa-sign-in-alt"></i> Join
-          </button>
-        </div>
-        <div id="roomDisplay" class="room-badge" style="display: none;"></div>
-      </div>
-
-      <div class="card">
-        <div class="card-title">
-          <i class="fas fa-link"></i>
-          <span>Відео</span>
-        </div>
-        <div class="input-group">
-          <input type="text" id="videoUrl" placeholder="Посилання на .mp4 відео">
-          <button class="btn btn-primary" onclick="setVideo()">
-            <i class="fas fa-play"></i> Load
-          </button>
-        </div>
-      </div>
-
-      <div class="video-wrapper">
-        <video id="video" controls></video>
-      </div>
-
-      <div id="status" class="status info">
-        <i class="fas fa-info-circle"></i>
-        <span>Готовий до роботи</span>
-      </div>
+  <div class="card">
+    <div class="card-title">
+      <i class="fas fa-door-open"></i>
+      <span>Кімната</span>
     </div>
+    <div class="input-group">
+      <input type="text" id="room" placeholder="Назва кімнати (наприклад: anime-night)">
+      <button class="btn btn-primary" onclick="joinRoom()">
+        <i class="fas fa-sign-in-alt"></i> Join
+      </button>
+    </div>
+    <div id="roomDisplay" class="room-badge" style="display: none;"></div>
+  </div>
 
-    <!-- Права колонка - Чат і глядачі -->
-    <div>
-      <!-- Список глядачів -->
-      <div class="card">
-        <div class="card-title">
-          <i class="fas fa-users"></i>
-          <span>Хто дивиться (<span id="viewerCount">0</span>)</span>
-        </div>
-        <div id="viewersList" class="viewers-list">
-          <div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">
-            <i class="fas fa-spinner fa-spin"></i> Завантаження...
-          </div>
-        </div>
-      </div>
-
-      <!-- Чат -->
-      <div class="chat-container">
-        <div class="card-title" style="padding: 15px 15px 0 15px; margin-bottom: 0;">
-          <i class="fas fa-comments"></i>
-          <span>Чат</span>
-        </div>
-        <div id="chatMessages" class="chat-messages">
-          <div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">
-            <i class="fas fa-comment-dots"></i> Повідомлень поки немає
-          </div>
-        </div>
-        <div class="chat-input-area">
-          <input type="text" id="chatInput" placeholder="Напишіть повідомлення..." onkeypress="if(event.key==='Enter') sendMessage()">
-          <button class="btn btn-primary" onclick="sendMessage()" style="padding: 12px 18px;">
-            <i class="fas fa-paper-plane"></i>
-          </button>
-        </div>
-      </div>
+  <div class="card">
+    <div class="card-title">
+      <i class="fas fa-link"></i>
+      <span>Відео</span>
+    </div>
+    <div class="input-group">
+      <input type="text" id="videoUrl" placeholder="Посилання на .mp4 відео">
+      <button class="btn btn-primary" onclick="setVideo()">
+        <i class="fas fa-play"></i> Load
+      </button>
     </div>
   </div>
 
-  <div class="card" style="margin-top: 20px;">
-    <div class="info-box" style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; text-align: center; font-size: 0.85rem; color: rgba(255,255,255,0.6);">
-      <i class="fas fa-flask"></i> Тестове відео: 
-      <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 6px;">https://www.w3schools.com/html/mov_bbb.mp4</code>
-    </div>
+  <div class="video-wrapper">
+    <video id="video" controls></video>
+  </div>
+
+  <div id="status" class="status info">
+    <i class="fas fa-info-circle"></i>
+    <span>Готовий до роботи</span>
+  </div>
+
+  <div class="info-box">
+    <i class="fas fa-users"></i> 1️⃣ Введіть назву кімнати → Join &nbsp;&nbsp;|&nbsp;&nbsp;
+    <i class="fas fa-video"></i> 2️⃣ Вставте .mp4 посилання → Load &nbsp;&nbsp;|&nbsp;&nbsp;
+    <i class="fas fa-share-alt"></i> 3️⃣ Дайте другу URL та назву кімнати
+    <br><br>
+    <i class="fas fa-flask"></i> Тестове відео: 
+    <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 6px;">https://www.w3schools.com/html/mov_bbb.mp4</code>
   </div>
 </div>
 
@@ -567,25 +362,10 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let roomRef = null;
-let userRef = null;
 let isUpdating = false;
-let currentUser = null;
-
 const video = document.getElementById("video");
 const statusDiv = document.getElementById("status");
 const roomDisplay = document.getElementById("roomDisplay");
-const viewersList = document.getElementById("viewersList");
-const viewerCountSpan = document.getElementById("viewerCount");
-const chatMessages = document.getElementById("chatMessages");
-const chatInput = document.getElementById("chatInput");
-const nicknameInput = document.getElementById("nickname");
-const avatarSelect = document.getElementById("avatarSelect");
-
-// Збереження ніка в localStorage
-const savedNick = localStorage.getItem('watchPartyNick');
-const savedAvatar = localStorage.getItem('watchPartyAvatar');
-if (savedNick) nicknameInput.value = savedNick;
-if (savedAvatar) avatarSelect.value = savedAvatar;
 
 function updateStatus(message, type = "info") {
   const icon = {
@@ -599,153 +379,29 @@ function updateStatus(message, type = "info") {
   console.log(`[${type}] ${message}`);
 }
 
-function getRandomColor() {
-  const colors = ['#e50914', '#ff4757', '#ff6b81', '#ffa502', '#7bed9f', '#70a1ff', '#eccc68', '#ff7f50'];
-  return colors[Math.floor(Math.random() * colors.length)];
-}
-
-// Додати повідомлення в чат
-function addChatMessage(user, message, avatar, time) {
-  const messageDiv = document.createElement('div');
-  messageDiv.className = 'chat-message';
-  messageDiv.innerHTML = `
-    <div class="chat-avatar" style="background: linear-gradient(135deg, ${getRandomColor()}, #ff4757);">
-      ${avatar}
-    </div>
-    <div class="chat-bubble">
-      <div class="chat-name">${escapeHtml(user)}</div>
-      <div class="chat-text">${escapeHtml(message)}</div>
-      <div class="chat-time">${time}</div>
-    </div>
-  `;
-  
-  if (chatMessages.children[0] && chatMessages.children[0].innerText.includes('Повідомлень поки немає')) {
-    chatMessages.innerHTML = '';
-  }
-  chatMessages.appendChild(messageDiv);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-// Оновити список глядачів
-function updateViewers(users) {
-  if (!users) {
-    viewersList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">👀 Нікого немає</div>';
-    viewerCountSpan.textContent = '0';
-    return;
-  }
-  
-  const userArray = Object.entries(users);
-  viewerCountSpan.textContent = userArray.length;
-  
-  if (userArray.length === 0) {
-    viewersList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.5); padding: 20px;">👀 Нікого немає</div>';
-    return;
-  }
-  
-  viewersList.innerHTML = userArray.map(([id, user]) => `
-    <div class="viewer-item">
-      <div class="viewer-avatar" style="background: linear-gradient(135deg, ${getRandomColor()}, #ff4757);">
-        ${user.avatar || '😀'}
-      </div>
-      <div class="viewer-info">
-        <div class="viewer-name">${escapeHtml(user.nickname || 'Анонім')}</div>
-        <div class="viewer-status"><i class="fas fa-circle"></i> в кімнаті</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
-
-// Відправити повідомлення
-window.sendMessage = function() {
-  if (!roomRef || !currentUser) {
-    updateStatus("Спочатку приєднайтесь до кімнати!", "error");
-    return;
-  }
-  
-  const message = chatInput.value.trim();
-  if (!message) return;
-  
-  const chatRef = db.ref("rooms/" + document.getElementById("room").value.trim() + "/chat");
-  chatRef.push({
-    user: currentUser.nickname,
-    avatar: currentUser.avatar,
-    message: message,
-    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  });
-  
-  chatInput.value = '';
-};
-
 window.joinRoom = function() {
   const room = document.getElementById("room").value.trim();
-  const nickname = nicknameInput.value.trim();
-  const avatar = avatarSelect.value;
-  
   if (!room) {
     updateStatus("Введіть назву кімнати!", "error");
     return;
   }
   
-  if (!nickname) {
-    updateStatus("Введіть ваше ім'я!", "error");
-    return;
-  }
-  
-  // Зберігаємо дані
-  localStorage.setItem('watchPartyNick', nickname);
-  localStorage.setItem('watchPartyAvatar', avatar);
-  
-  currentUser = {
-    id: Date.now() + '_' + Math.random(),
-    nickname: nickname,
-    avatar: avatar
-  };
-  
-  if (roomRef) {
-    if (userRef) userRef.remove();
-    roomRef.off();
-  }
+  if (roomRef) roomRef.off();
   
   roomRef = db.ref("rooms/" + room);
-  userRef = roomRef.child("users").child(currentUser.id);
   
-  // Додаємо користувача
-  userRef.set({
-    nickname: currentUser.nickname,
-    avatar: currentUser.avatar,
-    joinedAt: Date.now()
-  });
-  
-  // Видаляємо при виході
-  window.addEventListener('beforeunload', () => {
-    if (userRef) userRef.remove();
-  });
-  
-  // Слухаємо глядачів
-  roomRef.child("users").on("value", (snapshot) => {
-    updateViewers(snapshot.val());
-  });
-  
-  // Слухаємо чат
-  roomRef.child("chat").on("child_added", (snapshot) => {
-    const data = snapshot.val();
-    addChatMessage(data.user, data.message, data.avatar, data.time);
-  });
-  
-  // Слухаємо відео
   roomRef.on("value", (snapshot) => {
     const data = snapshot.val();
-    if (!data) return;
+    console.log("Отримано:", data);
+    
+    if (!data) {
+      updateStatus(`Кімната "${room}" порожня. Завантажте відео.`, "warning");
+      return;
+    }
     
     updateStatus(`В кімнаті: ${room}`, "success");
     roomDisplay.style.display = "inline-block";
-    roomDisplay.innerHTML = `<i class="fas fa-hashtag"></i> ${room} • ${nickname}`;
+    roomDisplay.innerHTML = `<i class="fas fa-hashtag"></i> ${room}`;
     isUpdating = true;
     
     if (data.video && video.src !== data.video) {
@@ -767,7 +423,7 @@ window.joinRoom = function() {
     isUpdating = false;
   });
   
-  updateStatus(`Приєднано до "${room}" як ${nickname}`, "success");
+  updateStatus(`Приєднано до "${room}"`, "success");
 };
 
 window.setVideo = function() {
@@ -784,7 +440,7 @@ window.setVideo = function() {
   
   updateStatus("Відправка...", "info");
   
-  roomRef.update({
+  roomRef.set({
     video: url,
     time: 0,
     playing: false
@@ -813,7 +469,7 @@ video.addEventListener("seeked", () => {
   }
 });
 
-updateStatus("Готово! Введіть ім'я, кімнату та натисніть Join", "success");
+updateStatus("Готово! Введіть кімнату", "success");
 </script>
 
 </body>
