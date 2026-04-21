@@ -2,11 +2,11 @@
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, set, update, onValue } from "firebase/database";
 
-// ВАШ КОНФІГ FIREBASE (виправлений)
+// ВИПРАВЛЕНИЙ КОНФІГ
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
-  databaseURL: "https://watch2-7672f-default-rtdb.europe-west1.firebasedatabase.app", // 🔥 ДОДАНО правильний URL
+  databaseURL: "https://watch2-767f2f-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "watch2-7672f",
   storageBucket: "watch2-7672f.firebasestorage.app",
   messagingSenderId: "535788651838",
@@ -25,7 +25,6 @@ let isUpdating = false;
 const video = document.getElementById("video");
 const statusDiv = document.getElementById("status");
 
-// Завантаження відео
 function loadVideo(url) {
   if (!url) return;
   
@@ -47,7 +46,6 @@ function loadVideo(url) {
   }
 }
 
-// Приєднання до кімнати
 window.joinRoom = function() {
   const room = document.getElementById("room").value;
   if (!room) {
@@ -57,28 +55,23 @@ window.joinRoom = function() {
   
   roomRef = ref(db, "rooms/" + room);
   
-  // Слухаємо зміни в базі
   onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
     if (!data) return;
     
     isUpdating = true;
     
-    // Завантажуємо відео якщо нове
     if (data.video && video.src !== data.video) {
       loadVideo(data.video);
     }
     
-    // Синхронізуємо час
     if (Math.abs(video.currentTime - data.time) > 0.5) {
       video.currentTime = data.time;
     }
     
-    // Синхронізуємо відтворення/паузу
     if (data.playing) {
       video.play().catch(e => {
         console.log("Автовідтворення заблоковано");
-        statusDiv.innerText = "⚠️ Клікніть по відео для відтворення";
       });
     } else {
       video.pause();
@@ -91,7 +84,6 @@ window.joinRoom = function() {
   console.log(`✅ Приєднались до кімнати: ${room}`);
 };
 
-// Встановити відео
 window.setVideo = function() {
   if (!roomRef) {
     alert("Спочатку приєднайтесь до кімнати (Join)!");
@@ -111,38 +103,28 @@ window.setVideo = function() {
   });
   
   statusDiv.innerText = "📺 Відео встановлено!";
-  console.log("✅ Відео встановлено:", url);
 };
 
-// ВІДПРАВЛЯЄМО ПОДІЇ В БАЗУ
 video.addEventListener("play", () => {
   if (roomRef && !isUpdating) {
-    console.log("▶️ Play, час:", video.currentTime);
-    update(roomRef, { 
-      playing: true, 
-      time: video.currentTime 
-    });
+    console.log("▶️ Play");
+    update(roomRef, { playing: true, time: video.currentTime });
   }
 });
 
 video.addEventListener("pause", () => {
   if (roomRef && !isUpdating) {
-    console.log("⏸️ Pause, час:", video.currentTime);
-    update(roomRef, { 
-      playing: false, 
-      time: video.currentTime 
-    });
+    console.log("⏸️ Pause");
+    update(roomRef, { playing: false, time: video.currentTime });
   }
 });
 
 video.addEventListener("seeked", () => {
   if (roomRef && !isUpdating) {
-    console.log("⏩ Seek, час:", video.currentTime);
-    update(roomRef, { 
-      time: video.currentTime 
-    });
+    console.log("⏩ Seek");
+    update(roomRef, { time: video.currentTime });
   }
 });
 
-console.log("✅ Watch Party готовий до роботи!");
-statusDiv.innerText = "✅ Сайт завантажено! Введіть кімнату та приєднуйтесь.";
+console.log("✅ Watch Party готовий!");
+statusDiv.innerText = "✅ Сайт завантажено! Введіть кімнату.";
