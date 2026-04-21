@@ -1,33 +1,36 @@
-// ===== ВАШ КОНФІГ FIREBASE (який ви отримали) =====
+// Імпорт Firebase (сучасний спосіб)
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, update, onValue } from "firebase/database";
+
+// ВАШ КОНФІГ FIREBASE
 const firebaseConfig = {
-  apiKey: "AIzaSyA45bS0mvdqH2xhlOAqCpRs6IXdKBrymwE",
-  authDomain: "realtime-database-c1c57.firebaseapp.com",
-  projectId: "realtime-database-c1c57",
-  storageBucket: "realtime-database-c1c57.firebasestorage.app",
-  messagingSenderId: "246127015513",
-  appId: "1:246127015513:web:6e54cb07b9e3540b892348",
-  measurementId: "G-Y2CFW4QD2T"
+  apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
+  authDomain: "watch2-7672f.firebaseapp.com",
+  projectId: "watch2-7672f",
+  storageBucket: "watch2-7672f.firebasestorage.app",
+  messagingSenderId: "535788651838",
+  appId: "1:535788651838:web:a77c7989426e4697a1586f",
+  measurementId: "G-F629PTYGLJ"
 };
 
-// Ініціалізація Firebase (працює з версією 8)
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// Ініціалізація
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-let roomRef;
+let roomRef = null;
 let currentHls = null;
 const video = document.getElementById("video");
+const statusDiv = document.getElementById("status");
 
-// Функція завантаження відео (підтримує mp4 та m3u8)
+// Завантаження відео (mp4 або m3u8)
 function loadVideo(url) {
   if (!url) return;
   
-  // Знищуємо старий HLS об'єкт, якщо був
   if (currentHls) {
     currentHls.destroy();
     currentHls = null;
   }
 
-  // Перевіряємо чи це .m3u8
   if (url.includes('.m3u8')) {
     if (Hls.isSupported()) {
       currentHls = new Hls();
@@ -37,49 +40,51 @@ function loadVideo(url) {
       video.src = url;
     }
   } else {
-    // Звичайне відео (mp4)
     video.src = url;
   }
+  
+  statusDiv.innerText = "✅ Відео завантажено!";
 }
 
 // Приєднання до кімнати
-function joinRoom() {
+window.joinRoom = function() {
   const room = document.getElementById("room").value;
   if (!room) {
     alert("Введіть назву кімнати!");
     return;
   }
   
-  roomRef = db.ref("rooms/" + room);
+  roomRef = ref(db, "rooms/" + room);
   
-  // Слухаємо зміни в кімнаті
-  roomRef.on("value", (snapshot) => {
+  // Слухаємо зміни
+  onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
     if (!data) return;
     
-    // Завантажуємо відео
     if (data.video) {
       loadVideo(data.video);
     }
     
-    // Синхронізуємо час
     if (Math.abs(video.currentTime - (data.time || 0)) > 1) {
       video.currentTime = data.time || 0;
     }
     
-    // Синхронізуємо відтворення
     if (data.playing) {
-      video.play().catch(e => console.log("Автовідтворення заблоковано:", e));
+      video.play().catch(e => {
+        console.log("Потрібно клікнути по відео для авто відтворення");
+        statusDiv.innerText = "⚠️ Клікніть по відео для відтворення";
+      });
     } else {
       video.pause();
     }
   });
   
-  alert("Ви в кімнаті: " + room);
-}
+  statusDiv.innerText = `✅ Ви в кімнаті: ${room}`;
+  alert(`✅ Ви в кімнаті: ${room}\nДайте другу цю назву!`);
+};
 
-// Встановити нове відео
-function setVideo() {
+// Встановити відео
+window.setVideo = function() {
   if (!roomRef) {
     alert("Спочатку приєднайтесь до кімнати (Join)!");
     return;
@@ -91,40 +96,41 @@ function setVideo() {
     return;
   }
   
-  roomRef.set({
+  set(roomRef, {
     video: url,
     time: 0,
     playing: false
   });
   
-  alert("Відео завантажено!");
-}
+  statusDiv.innerText = "📺 Відео встановлено!";
+};
 
-// ===== СИНХРОНІЗАЦІЯ ПОДІЙ =====
+// Синхронізація подій
 video.addEventListener("play", () => {
   if (roomRef) {
-    roomRef.update({
-      playing: true,
-      time: video.currentTime
+    update(roomRef, { 
+      playing: true, 
+      time: video.currentTime 
     });
   }
 });
 
 video.addEventListener("pause", () => {
   if (roomRef) {
-    roomRef.update({
-      playing: false,
-      time: video.currentTime
+    update(roomRef, { 
+      playing: false, 
+      time: video.currentTime 
     });
   }
 });
 
 video.addEventListener("seeked", () => {
   if (roomRef) {
-    roomRef.update({
-      time: video.currentTime
+    update(roomRef, { 
+      time: video.currentTime 
     });
   }
 });
 
-console.log("✅ Сайт готовий до роботи!");
+console.log("✅ Watch Party готовий до роботи!");
+statusDiv.innerText = "✅ Сайт завантажено! Введіть кімнату та приєднуйтесь.";
