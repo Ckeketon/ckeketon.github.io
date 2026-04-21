@@ -1,4 +1,4 @@
-// 🔥 Твій Firebase config (те що ти скинув)
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyA45bS0mvdqH2xhlOAqCpRs6IXdKBrymwE",
   authDomain: "realtime-database-c1c57.firebaseapp.com",
