@@ -1,4 +1,4 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// ===== ВАШ КОНФІГ FIREBASE (який ви отримали) =====
 const firebaseConfig = {
   apiKey: "AIzaSyA45bS0mvdqH2xhlOAqCpRs6IXdKBrymwE",
   authDomain: "realtime-database-c1c57.firebaseapp.com",
@@ -9,100 +9,122 @@ const firebaseConfig = {
   measurementId: "G-Y2CFW4QD2T"
 };
 
-// Ініціалізація Firebase
+// Ініціалізація Firebase (працює з версією 8)
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 let roomRef;
 let currentHls = null;
-
 const video = document.getElementById("video");
 
-
-// 🎬 Завантаження відео (mp4 + m3u8)
+// Функція завантаження відео (підтримує mp4 та m3u8)
 function loadVideo(url) {
+  if (!url) return;
+  
+  // Знищуємо старий HLS об'єкт, якщо був
   if (currentHls) {
     currentHls.destroy();
     currentHls = null;
   }
 
-  if (url.endsWith(".m3u8")) {
+  // Перевіряємо чи це .m3u8
+  if (url.includes('.m3u8')) {
     if (Hls.isSupported()) {
       currentHls = new Hls();
       currentHls.loadSource(url);
       currentHls.attachMedia(video);
-    } else {
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = url;
     }
   } else {
+    // Звичайне відео (mp4)
     video.src = url;
   }
 }
 
-
-// 🔗 Join кімнати
+// Приєднання до кімнати
 function joinRoom() {
   const room = document.getElementById("room").value;
+  if (!room) {
+    alert("Введіть назву кімнати!");
+    return;
+  }
+  
   roomRef = db.ref("rooms/" + room);
-
-  roomRef.on("value", (snap) => {
-    const data = snap.val();
+  
+  // Слухаємо зміни в кімнаті
+  roomRef.on("value", (snapshot) => {
+    const data = snapshot.val();
     if (!data) return;
-
-    if (data.video) loadVideo(data.video);
-
-    if (Math.abs(video.currentTime - data.time) > 1) {
+    
+    // Завантажуємо відео
+    if (data.video) {
+      loadVideo(data.video);
+    }
+    
+    // Синхронізуємо час
+    if (Math.abs(video.currentTime - (data.time || 0)) > 1) {
       video.currentTime = data.time || 0;
     }
-
+    
+    // Синхронізуємо відтворення
     if (data.playing) {
-      video.play().catch(() => {});
+      video.play().catch(e => console.log("Автовідтворення заблоковано:", e));
     } else {
       video.pause();
     }
   });
+  
+  alert("Ви в кімнаті: " + room);
 }
 
-
-// 📺 Встановити відео
+// Встановити нове відео
 function setVideo() {
+  if (!roomRef) {
+    alert("Спочатку приєднайтесь до кімнати (Join)!");
+    return;
+  }
+  
   const url = document.getElementById("videoUrl").value;
-
+  if (!url) {
+    alert("Вставте посилання на відео!");
+    return;
+  }
+  
   roomRef.set({
     video: url,
     time: 0,
     playing: false
   });
+  
+  alert("Відео завантажено!");
 }
 
-
-// ▶️ Play
+// ===== СИНХРОНІЗАЦІЯ ПОДІЙ =====
 video.addEventListener("play", () => {
-  if (!roomRef) return;
-
-  roomRef.update({
-    playing: true,
-    time: video.currentTime
-  });
+  if (roomRef) {
+    roomRef.update({
+      playing: true,
+      time: video.currentTime
+    });
+  }
 });
 
-
-// ⏸ Pause
 video.addEventListener("pause", () => {
-  if (!roomRef) return;
-
-  roomRef.update({
-    playing: false,
-    time: video.currentTime
-  });
+  if (roomRef) {
+    roomRef.update({
+      playing: false,
+      time: video.currentTime
+    });
+  }
 });
 
-
-// ⏩ Seek
 video.addEventListener("seeked", () => {
-  if (!roomRef) return;
-
-  roomRef.update({
-    time: video.currentTime
-  });
+  if (roomRef) {
+    roomRef.update({
+      time: video.currentTime
+    });
+  }
 });
+
+console.log("✅ Сайт готовий до роботи!");
