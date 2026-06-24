@@ -31,16 +31,17 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
     .subtitle {
-      color: rgba(255,255,255,0.5);
-      margin-bottom: 30px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85rem;
+      margin-bottom: 25px;
     }
     .input-group {
       display: flex;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
     .input-group input {
       flex: 1;
@@ -55,6 +56,9 @@
     .input-group input:focus {
       border-color: #9b59b6;
     }
+    .input-group input::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
     .btn {
       padding: 14px 24px;
       border: none;
@@ -63,58 +67,16 @@
       cursor: pointer;
       background: linear-gradient(135deg, #9b59b6, #e74c3c);
       color: white;
+      transition: 0.3s;
     }
     .btn:hover {
-      transform: scale(1.02);
-    }
-    #player {
-      margin-top: 20px;
-      display: none;
-    }
-    iframe {
-      width: 100%;
-      height: 200px;
-      border-radius: 15px;
-      border: none;
-    }
-    .download-section {
-      margin-top: 15px;
-      padding: 15px;
-      background: rgba(46,204,113,0.1);
-      border: 1px solid #2ecc71;
-      border-radius: 10px;
-      display: none;
-    }
-    .download-section a {
-      color: #2ecc71;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .back-link {
-      display: block;
-      margin-top: 25px;
-      color: rgba(255,255,255,0.3);
-      text-decoration: none;
-    }
-    .back-link:hover {
-      color: rgba(255,255,255,0.7);
-    }
-    .info-box {
-      background: rgba(155,89,182,0.1);
-      border: 1px solid #9b59b6;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 15px 0;
-      font-size: 0.85rem;
-      color: #b380c9;
-    }
-    .info-box a {
-      color: #b380c9;
+      transform: scale(1.03);
+      box-shadow: 0 5px 20px rgba(155,89,182,0.4);
     }
     .tabs {
       display: flex;
       gap: 10px;
-      margin: 15px 0;
+      margin: 20px 0 15px;
     }
     .tab-btn {
       flex: 1;
@@ -122,12 +84,82 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 10px;
-      color: white;
+      color: rgba(255,255,255,0.5);
       cursor: pointer;
+      transition: 0.3s;
     }
     .tab-btn.active {
-      background: rgba(155,89,182,0.3);
+      background: rgba(155,89,182,0.25);
       border-color: #9b59b6;
+      color: white;
+    }
+    #player {
+      display: none;
+      margin-top: 15px;
+    }
+    #player iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 15px;
+      border: none;
+    }
+    .download-section {
+      display: none;
+      margin-top: 15px;
+      padding: 20px;
+      background: rgba(46,204,113,0.08);
+      border: 1px solid #2ecc71;
+      border-radius: 15px;
+    }
+    .download-section h3 {
+      color: #2ecc71;
+      font-size: 1rem;
+      margin-bottom: 15px;
+    }
+    .download-links {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .download-links a {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .download-links a:hover {
+      background: rgba(46,204,113,0.2);
+      border-color: #2ecc71;
+      transform: translateY(-2px);
+    }
+    .info-box {
+      background: rgba(155,89,182,0.08);
+      border: 1px solid rgba(155,89,182,0.2);
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin: 15px 0;
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .info-box strong {
+      color: #b380c9;
+    }
+    .back-link {
+      display: block;
+      margin-top: 25px;
+      color: rgba(255,255,255,0.2);
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .back-link:hover {
+      color: rgba(255,255,255,0.6);
     }
     @media (max-width: 480px) {
       .container { padding: 25px; }
@@ -139,16 +171,16 @@
 
 <div class="container">
   <h1>🎵 YouTube MP3</h1>
-  <p class="subtitle">Вставте посилання та слухайте онлайн</p>
+  <p class="subtitle">Вставте посилання, слухайте та скачуйте</p>
 
   <div class="input-group">
-    <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=..." value="https://youtu.be/tMx3V5iVTnw?si=6TZ6FBBeX4hul-0u">
-    <button class="btn" id="playBtn">▶ Відтворити</button>
+    <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=..." value="https://youtu.be/tMx3V5iVTnw">
+    <button class="btn" id="loadBtn">▶ Завантажити</button>
   </div>
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="player">🎵 Плеєр</button>
-    <button class="tab-btn" data-tab="download">⬇️ Скачати</button>
+    <button class="tab-btn" data-tab="download">⬇️ Скачати MP3</button>
   </div>
 
   <div id="player">
@@ -156,18 +188,18 @@
   </div>
 
   <div id="downloadSection" class="download-section">
-    <p style="color:#2ecc71;">⬇️ Завантажте MP3 через сервіс:</p>
-    <p style="margin-top:10px;">
-      <a href="#" target="_blank" id="y2mateLink">🔊 y2mate.is</a> &nbsp;|&nbsp;
+    <h3>⬇️ Завантажте MP3 через перевірені сервіси</h3>
+    <div class="download-links">
+      <a href="#" target="_blank" id="y2mateLink">🔊 y2mate.is</a>
       <a href="#" target="_blank" id="loaderLink">🔊 loader.to</a>
+    </div>
+    <p style="color:rgba(255,255,255,0.3); font-size:0.75rem; margin-top:12px;">
+      1. Вставте посилання на сайті → 2. Оберіть MP3 → 3. Скачайте
     </p>
   </div>
 
   <div class="info-box">
-    💡 <strong>Як скачати MP3:</strong><br>
-    1️⃣ Відкрийте <a href="https://y2mate.is/" target="_blank">y2mate.is</a> або <a href="https://loader.to/" target="_blank">loader.to</a><br>
-    2️⃣ Вставте посилання на YouTube → Натисніть "Конвертувати"<br>
-    3️⃣ Оберіть MP3 → Скачайте
+    💡 <strong>Порада:</strong> Для скачування MP3 використовуйте вкладку <strong>"Скачати MP3"</strong> – там є готові посилання на безкоштовні сервіси.
   </div>
 
   <a href="index.html" class="back-link">← Повернутись до Watch Party</a>
@@ -175,6 +207,7 @@
 
 <script>
   function getYoutubeId(url) {
+    if (!url) return null;
     url = url.replace('music.youtube.com', 'youtube.com');
     const patterns = [
       /(?:youtube\.com\/watch\?v=)([^&]+)/,
@@ -188,26 +221,27 @@
     return null;
   }
 
-  function playVideo() {
+  function loadVideo() {
     const url = document.getElementById('youtubeUrl').value.trim();
     const videoId = getYoutubeId(url);
     
     if (!videoId) {
-      alert('Невірне посилання на YouTube');
+      alert('❌ Невірне посилання на YouTube');
       return;
     }
 
+    // Плеєр
     const iframe = document.getElementById('youtubeIframe');
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
     document.getElementById('player').style.display = 'block';
 
-    // Оновлюємо посилання для скачування
+    // Посилання для скачування
     document.getElementById('y2mateLink').href = `https://y2mate.is/search?q=${videoId}`;
     document.getElementById('loaderLink').href = `https://loader.to/?url=https://youtu.be/${videoId}`;
     document.getElementById('downloadSection').style.display = 'block';
   }
 
-  // Таби
+  // ===== ТАБИ =====
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -223,14 +257,15 @@
     });
   });
 
-  document.getElementById('playBtn').addEventListener('click', playVideo);
+  // ===== ПОДІЇ =====
+  document.getElementById('loadBtn').addEventListener('click', loadVideo);
   document.getElementById('youtubeUrl').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') playVideo();
+    if (e.key === 'Enter') loadVideo();
   });
 
-  // Автозапуск
+  // ===== АВТОЗАВАНТАЖЕННЯ =====
   window.onload = function() {
-    setTimeout(playVideo, 500);
+    setTimeout(loadVideo, 300);
   };
 </script>
 
