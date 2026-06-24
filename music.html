@@ -77,6 +77,19 @@
       border-radius: 15px;
       border: none;
     }
+    .download-section {
+      margin-top: 15px;
+      padding: 15px;
+      background: rgba(46,204,113,0.1);
+      border: 1px solid #2ecc71;
+      border-radius: 10px;
+      display: none;
+    }
+    .download-section a {
+      color: #2ecc71;
+      text-decoration: none;
+      font-weight: 600;
+    }
     .back-link {
       display: block;
       margin-top: 25px;
@@ -98,7 +111,26 @@
     .info-box a {
       color: #b380c9;
     }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: rgba(155,89,182,0.3);
+      border-color: #9b59b6;
+    }
     @media (max-width: 480px) {
+      .container { padding: 25px; }
       .input-group { flex-direction: column; }
     }
   </style>
@@ -110,18 +142,32 @@
   <p class="subtitle">Вставте посилання та слухайте онлайн</p>
 
   <div class="input-group">
-    <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=...">
+    <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=..." value="https://youtu.be/tMx3V5iVTnw?si=6TZ6FBBeX4hul-0u">
     <button class="btn" id="playBtn">▶ Відтворити</button>
   </div>
 
-  <div class="info-box">
-    💡 Для скачування MP3 використовуйте:<br>
-    <a href="https://y2mate.is/" target="_blank">y2mate.is</a> або 
-    <a href="https://loader.to/" target="_blank">loader.to</a>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="player">🎵 Плеєр</button>
+    <button class="tab-btn" data-tab="download">⬇️ Скачати</button>
   </div>
 
   <div id="player">
     <iframe id="youtubeIframe" allow="encrypted-media" allowfullscreen></iframe>
+  </div>
+
+  <div id="downloadSection" class="download-section">
+    <p style="color:#2ecc71;">⬇️ Завантажте MP3 через сервіс:</p>
+    <p style="margin-top:10px;">
+      <a href="#" target="_blank" id="y2mateLink">🔊 y2mate.is</a> &nbsp;|&nbsp;
+      <a href="#" target="_blank" id="loaderLink">🔊 loader.to</a>
+    </p>
+  </div>
+
+  <div class="info-box">
+    💡 <strong>Як скачати MP3:</strong><br>
+    1️⃣ Відкрийте <a href="https://y2mate.is/" target="_blank">y2mate.is</a> або <a href="https://loader.to/" target="_blank">loader.to</a><br>
+    2️⃣ Вставте посилання на YouTube → Натисніть "Конвертувати"<br>
+    3️⃣ Оберіть MP3 → Скачайте
   </div>
 
   <a href="index.html" class="back-link">← Повернутись до Watch Party</a>
@@ -132,7 +178,8 @@
     url = url.replace('music.youtube.com', 'youtube.com');
     const patterns = [
       /(?:youtube\.com\/watch\?v=)([^&]+)/,
-      /(?:youtu\.be\/)([^?]+)/
+      /(?:youtu\.be\/)([^?]+)/,
+      /(?:youtube\.com\/embed\/)([^?]+)/
     ];
     for (const pattern of patterns) {
       const match = url.match(pattern);
@@ -150,17 +197,41 @@
       return;
     }
 
-    const player = document.getElementById('player');
     const iframe = document.getElementById('youtubeIframe');
-    
     iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    player.style.display = 'block';
+    document.getElementById('player').style.display = 'block';
+
+    // Оновлюємо посилання для скачування
+    document.getElementById('y2mateLink').href = `https://y2mate.is/search?q=${videoId}`;
+    document.getElementById('loaderLink').href = `https://loader.to/?url=https://youtu.be/${videoId}`;
+    document.getElementById('downloadSection').style.display = 'block';
   }
+
+  // Таби
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      
+      if (this.dataset.tab === 'player') {
+        document.getElementById('player').style.display = 'block';
+        document.getElementById('downloadSection').style.display = 'none';
+      } else {
+        document.getElementById('player').style.display = 'none';
+        document.getElementById('downloadSection').style.display = 'block';
+      }
+    });
+  });
 
   document.getElementById('playBtn').addEventListener('click', playVideo);
   document.getElementById('youtubeUrl').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') playVideo();
   });
+
+  // Автозапуск
+  window.onload = function() {
+    setTimeout(playVideo, 500);
+  };
 </script>
 
 </body>
