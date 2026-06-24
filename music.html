@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎵 Завантажити MP3 з YouTube</title>
-  
+  <title>🎵 YouTube MP3</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       min-height: 100vh;
       display: flex;
@@ -21,14 +20,13 @@
       backdrop-filter: blur(20px);
       border-radius: 30px;
       padding: 40px;
-      max-width: 600px;
+      max-width: 700px;
       width: 100%;
       border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      text-align: center;
     }
     h1 {
       font-size: 2rem;
-      text-align: center;
       background: linear-gradient(135deg, #fff, #9b59b6);
       -webkit-background-clip: text;
       background-clip: text;
@@ -36,9 +34,7 @@
       margin-bottom: 10px;
     }
     .subtitle {
-      text-align: center;
       color: rgba(255,255,255,0.5);
-      font-size: 0.9rem;
       margin-bottom: 30px;
     }
     .input-group {
@@ -55,140 +51,54 @@
       color: white;
       font-size: 1rem;
       outline: none;
-      transition: 0.3s;
     }
     .input-group input:focus {
       border-color: #9b59b6;
-      background: rgba(255,255,255,0.1);
-    }
-    .input-group input::placeholder {
-      color: rgba(255,255,255,0.3);
     }
     .btn {
       padding: 14px 24px;
       border: none;
       border-radius: 12px;
-      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
       background: linear-gradient(135deg, #9b59b6, #e74c3c);
       color: white;
     }
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(155,89,182,0.4);
+      transform: scale(1.02);
     }
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    #result {
-      margin-top: 30px;
+    #player {
+      margin-top: 20px;
       display: none;
     }
-    .video-info {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 15px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 12px;
-      margin-bottom: 15px;
-    }
-    .video-info img {
-      width: 80px;
-      height: 60px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-    .video-info .title {
-      color: white;
-      font-weight: 500;
-    }
-    .video-info .duration {
-      color: rgba(255,255,255,0.4);
-      font-size: 0.8rem;
-    }
-    .download-btn {
+    iframe {
       width: 100%;
-      padding: 16px;
+      height: 200px;
+      border-radius: 15px;
       border: none;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-      color: white;
-    }
-    .download-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(46,204,113,0.4);
-    }
-    .loader {
-      display: none;
-      text-align: center;
-      padding: 20px;
-    }
-    .loader-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(255,255,255,0.1);
-      border-top-color: #9b59b6;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 15px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loader-text {
-      color: rgba(255,255,255,0.5);
-      font-size: 0.9rem;
     }
     .back-link {
       display: block;
-      text-align: center;
       margin-top: 25px;
       color: rgba(255,255,255,0.3);
       text-decoration: none;
-      transition: 0.3s;
     }
     .back-link:hover {
       color: rgba(255,255,255,0.7);
     }
-    .error-message {
-      background: rgba(231,76,60,0.2);
-      border: 1px solid #e74c3c;
-      color: #e74c3c;
-      padding: 12px 16px;
-      border-radius: 10px;
-      margin-top: 15px;
-      display: none;
-    }
-    .info-text {
+    .info-box {
       background: rgba(155,89,182,0.1);
       border: 1px solid #9b59b6;
-      color: #b380c9;
-      padding: 12px 16px;
+      padding: 12px;
       border-radius: 10px;
-      margin-top: 15px;
-      font-size: 0.8rem;
-      text-align: center;
+      margin: 15px 0;
+      font-size: 0.85rem;
+      color: #b380c9;
     }
-    .alternative-link {
-      display: block;
-      text-align: center;
-      margin-top: 10px;
-      color: #9b59b6;
-      font-size: 0.8rem;
-    }
-    .alternative-link a {
-      color: #9b59b6;
-      text-decoration: none;
+    .info-box a {
+      color: #b380c9;
     }
     @media (max-width: 480px) {
-      .container { padding: 25px; }
       .input-group { flex-direction: column; }
     }
   </style>
@@ -196,81 +106,33 @@
 <body>
 
 <div class="container">
-  <h1>🎵 MP3 Downloader</h1>
-  <p class="subtitle">Вставте посилання на YouTube відео</p>
+  <h1>🎵 YouTube MP3</h1>
+  <p class="subtitle">Вставте посилання та слухайте онлайн</p>
 
   <div class="input-group">
     <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=...">
-    <button class="btn" id="convertBtn">Конвертувати</button>
+    <button class="btn" id="playBtn">▶ Відтворити</button>
   </div>
 
-  <div class="info-text">
-    💡 Використовуйте посилання з <strong>youtube.com</strong> або <strong>youtu.be</strong>
+  <div class="info-box">
+    💡 Для скачування MP3 використовуйте:<br>
+    <a href="https://y2mate.is/" target="_blank">y2mate.is</a> або 
+    <a href="https://loader.to/" target="_blank">loader.to</a>
   </div>
 
-  <!-- Завантаження -->
-  <div class="loader" id="loader">
-    <div class="loader-spinner"></div>
-    <div class="loader-text">⏳ Обробка відео...</div>
-  </div>
-
-  <!-- Результат -->
-  <div id="result">
-    <div class="video-info" id="videoInfo">
-      <img id="thumbnail" src="" alt="Thumbnail">
-      <div>
-        <div class="title" id="videoTitle">Назва відео</div>
-        <div class="duration" id="videoDuration">⏱️ 0:00</div>
-      </div>
-    </div>
-    <button class="download-btn" id="downloadBtn">⬇️ Завантажити MP3</button>
-  </div>
-
-  <!-- Помилка -->
-  <div class="error-message" id="errorMessage">❌ Сталася помилка. Спробуйте інше відео.</div>
-
-  <div class="alternative-link">
-    ⚠️ Якщо не працює – спробуйте <a href="https://y2mate.is/" target="_blank">y2mate.is</a> або <a href="https://loader.to/" target="_blank">loader.to</a>
+  <div id="player">
+    <iframe id="youtubeIframe" allow="encrypted-media" allowfullscreen></iframe>
   </div>
 
   <a href="index.html" class="back-link">← Повернутись до Watch Party</a>
 </div>
 
 <script>
-  // ===== ВИБІР API (спробує кілька) =====
-  const APIS = [
-    {
-      name: 'vevioz',
-      url: (id) => `https://api.vevioz.com/api/button/mp3/${id}`
-    },
-    {
-      name: 'savemp3',
-      url: (id) => `https://savemp3.net/api/convert?url=https://youtube.com/watch?v=${id}`
-    }
-  ];
-
-  let currentApiIndex = 0;
-
-  const urlInput = document.getElementById('youtubeUrl');
-  const convertBtn = document.getElementById('convertBtn');
-  const loader = document.getElementById('loader');
-  const resultDiv = document.getElementById('result');
-  const errorDiv = document.getElementById('errorMessage');
-
-  const thumbnail = document.getElementById('thumbnail');
-  const videoTitle = document.getElementById('videoTitle');
-  const videoDuration = document.getElementById('videoDuration');
-  const downloadBtn = document.getElementById('downloadBtn');
-
-  let currentDownloadUrl = null;
-
   function getYoutubeId(url) {
     url = url.replace('music.youtube.com', 'youtube.com');
     const patterns = [
       /(?:youtube\.com\/watch\?v=)([^&]+)/,
-      /(?:youtu\.be\/)([^?]+)/,
-      /(?:youtube\.com\/embed\/)([^?]+)/,
-      /(?:youtube\.com\/v\/)([^?]+)/
+      /(?:youtu\.be\/)([^?]+)/
     ];
     for (const pattern of patterns) {
       const match = url.match(pattern);
@@ -279,102 +141,26 @@
     return null;
   }
 
-  async function convertVideo() {
-    const url = urlInput.value.trim();
-    if (!url) {
-      showError('Введіть посилання на YouTube відео');
-      return;
-    }
-
+  function playVideo() {
+    const url = document.getElementById('youtubeUrl').value.trim();
     const videoId = getYoutubeId(url);
+    
     if (!videoId) {
-      showError('Невірне посилання на YouTube');
+      alert('Невірне посилання на YouTube');
       return;
     }
 
-    loader.style.display = 'block';
-    resultDiv.style.display = 'none';
-    errorDiv.style.display = 'none';
-    convertBtn.disabled = true;
-    convertBtn.textContent = '⏳ Завантаження...';
-
-    // Спробуємо всі API по черзі
-    for (let i = 0; i < APIS.length; i++) {
-      const api = APIS[i];
-      try {
-        console.log(`Спроба API: ${api.name}`);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 20000);
-
-        const response = await fetch(api.url(videoId), {
-          signal: controller.signal,
-          headers: { 'Accept': 'application/json' }
-        });
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log(`Відповідь ${api.name}:`, data);
-
-          // Перевіряємо різні формати відповіді
-          let link = null;
-          let title = null;
-          let duration = null;
-          let thumbnailUrl = null;
-
-          if (api.name === 'vevioz') {
-            if (data.status === 'success' && data.link) {
-              link = data.link;
-              title = data.title;
-              duration = data.duration;
-              thumbnailUrl = data.thumbnail;
-            }
-          } else if (api.name === 'savemp3') {
-            if (data.success && data.download_url) {
-              link = data.download_url;
-              title = data.title;
-              duration = data.duration;
-              thumbnailUrl = data.thumbnail;
-            }
-          }
-
-          if (link) {
-            currentDownloadUrl = link;
-            thumbnail.src = thumbnailUrl || `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-            videoTitle.textContent = title || 'Назва недоступна';
-            videoDuration.textContent = `⏱️ ${duration || '0:00'}`;
-            downloadBtn.onclick = () => window.open(currentDownloadUrl, '_blank');
-            resultDiv.style.display = 'block';
-            errorDiv.style.display = 'none';
-            loader.style.display = 'none';
-            convertBtn.disabled = false;
-            convertBtn.textContent = 'Конвертувати';
-            return;
-          }
-        }
-      } catch (error) {
-        console.log(`API ${api.name} не відповів:`, error.message);
-      }
-    }
-
-    // Якщо жоден API не спрацював
-    showError('Не вдалося отримати MP3. Спробуйте інше відео або скористайтесь альтернативним сервісом.');
-    loader.style.display = 'none';
-    convertBtn.disabled = false;
-    convertBtn.textContent = 'Конвертувати';
+    const player = document.getElementById('player');
+    const iframe = document.getElementById('youtubeIframe');
+    
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    player.style.display = 'block';
   }
 
-  function showError(message) {
-    errorDiv.textContent = '❌ ' + message;
-    errorDiv.style.display = 'block';
-    resultDiv.style.display = 'none';
-  }
-
-  urlInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') convertVideo();
+  document.getElementById('playBtn').addEventListener('click', playVideo);
+  document.getElementById('youtubeUrl').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') playVideo();
   });
-
-  convertBtn.addEventListener('click', convertVideo);
 </script>
 
 </body>
