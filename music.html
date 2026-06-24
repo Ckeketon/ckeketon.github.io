@@ -42,6 +42,7 @@
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
+      flex-wrap: wrap;
     }
     .input-group input {
       flex: 1;
@@ -52,6 +53,7 @@
       color: white;
       font-size: 1rem;
       outline: none;
+      min-width: 200px;
     }
     .input-group input:focus {
       border-color: #9b59b6;
@@ -65,17 +67,29 @@
       border-radius: 12px;
       font-weight: 600;
       cursor: pointer;
+      transition: 0.3s;
+      white-space: nowrap;
+    }
+    .btn-primary {
       background: linear-gradient(135deg, #9b59b6, #e74c3c);
       color: white;
-      transition: 0.3s;
     }
-    .btn:hover {
+    .btn-primary:hover {
       transform: scale(1.03);
       box-shadow: 0 5px 20px rgba(155,89,182,0.4);
+    }
+    .btn-success {
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+    }
+    .btn-success:hover {
+      transform: scale(1.03);
+      box-shadow: 0 5px 20px rgba(46,204,113,0.4);
     }
     .btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none !important;
     }
     .tabs {
       display: flex;
@@ -120,23 +134,27 @@
       font-size: 1rem;
       margin-bottom: 15px;
     }
-    .download-btn {
-      padding: 12px 30px;
-      background: linear-gradient(135deg, #2ecc71, #27ae60);
-      border: none;
-      border-radius: 12px;
+    .filename-input {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .filename-input label {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.85rem;
+    }
+    .filename-input input {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
       color: white;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .download-btn:hover {
-      transform: scale(1.03);
-      box-shadow: 0 5px 20px rgba(46,204,113,0.4);
-    }
-    .download-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
+      font-size: 0.9rem;
+      min-width: 150px;
     }
     .loader {
       display: none;
@@ -181,21 +199,53 @@
     }
     .status-message {
       margin-top: 10px;
+      padding: 10px;
+      border-radius: 10px;
       font-size: 0.85rem;
-      color: rgba(255,255,255,0.5);
+      display: none;
+    }
+    .status-message.show {
+      display: block;
     }
     .status-message.success {
+      background: rgba(46,204,113,0.15);
+      border: 1px solid #2ecc71;
       color: #2ecc71;
     }
     .status-message.error {
+      background: rgba(231,76,60,0.15);
+      border: 1px solid #e74c3c;
       color: #e74c3c;
     }
     .status-message.info {
+      background: rgba(241,196,15,0.15);
+      border: 1px solid #f1c40f;
       color: #f1c40f;
+    }
+    .external-links {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .external-links a {
+      color: #9b59b6;
+      text-decoration: none;
+      padding: 6px 14px;
+      border: 1px solid #9b59b6;
+      border-radius: 20px;
+      transition: 0.3s;
+      font-size: 0.8rem;
+    }
+    .external-links a:hover {
+      background: #9b59b6;
+      color: white;
     }
     @media (max-width: 480px) {
       .container { padding: 25px; }
       .input-group { flex-direction: column; }
+      .filename-input { flex-direction: column; }
     }
   </style>
 </head>
@@ -207,7 +257,7 @@
 
   <div class="input-group">
     <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=..." value="https://youtu.be/tMx3V5iVTnw">
-    <button class="btn" id="loadBtn">▶ Завантажити</button>
+    <button class="btn btn-primary" id="loadBtn">▶ Завантажити</button>
   </div>
 
   <div class="tabs">
@@ -221,55 +271,47 @@
 
   <div id="downloadSection" class="download-section">
     <h3>⬇️ Завантажити MP3</h3>
+    
+    <div class="filename-input">
+      <label>Назва файлу:</label>
+      <input type="text" id="filenameInput" placeholder="назва_пісні" value="my_music">
+      <span style="color:rgba(255,255,255,0.3);">.mp3</span>
+    </div>
+
     <div class="loader" id="loader">
       <div class="loader-spinner"></div>
       <div class="loader-text">⏳ Пошук MP3...</div>
     </div>
-    <button class="download-btn" id="downloadBtn">🔊 Знайти та скачати</button>
+
+    <button class="btn btn-success" id="downloadBtn" style="width:100%;">🔊 Знайти та скачати</button>
     <div class="status-message" id="statusMessage"></div>
   </div>
 
   <div class="info-box">
-    💡 <strong>Як це працює:</strong> Сайт пробує кілька безкоштовних API для пошуку MP3.<br>
-    Якщо не вдається – використовуйте <strong>y2mate.is</strong> або <strong>loader.to</strong> (посилання нижче).
+    💡 <strong>Як це працює:</strong> Сайт пробує знайти MP3 через безкоштовні сервіси.<br>
+    Якщо не вдається – скористайтесь посиланнями нижче.
   </div>
 
-  <div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-top:10px;">
-    <a href="https://y2mate.is/" target="_blank" style="color:#9b59b6; text-decoration:none;">🔊 y2mate.is</a>
-    <a href="https://loader.to/" target="_blank" style="color:#9b59b6; text-decoration:none;">🔊 loader.to</a>
+  <div class="external-links">
+    <a href="https://y2mate.is/" target="_blank">🔊 y2mate.is</a>
+    <a href="https://loader.to/" target="_blank">🔊 loader.to</a>
   </div>
 
   <a href="index.html" class="back-link">← Повернутись до Watch Party</a>
 </div>
 
 <script>
-  // ===== БЕЗКОШТОВНІ API ДЛЯ ПОШУКУ MP3 =====
-  const APIS = [
-    {
-      name: 'vevioz',
-      url: (id) => `https://api.vevioz.com/api/button/mp3/${id}`,
-      parse: (data) => data.link && data.status === 'success' ? data.link : null
-    },
-    {
-      name: 'savemp3',
-      url: (id) => `https://savemp3.net/api/convert?url=https://youtube.com/watch?v=${id}`,
-      parse: (data) => data.download_url || null
-    },
-    {
-      name: 'ytmp3',
-      url: (id) => `https://ytmp3.cc/api/convert?video_id=${id}`,
-      parse: (data) => data.url || null
-    }
-  ];
-
-  // ===== CORS-ПРОКСІ (для обходу блокувань) =====
+  // ===== НОВИЙ API (спробуємо інший) =====
+  const API_URL = 'https://api.vevioz.com/api/button/mp3/';
+  
+  // ===== CORS-ПРОКСІ =====
   const PROXIES = [
-    'https://cors-anywhere.herokuapp.com/',
-    'https://api.allorigins.win/raw?url=',
-    'https://corsproxy.io/?'
+    'https://corsproxy.io/?',
+    'https://api.allorigins.win/raw?url='
   ];
 
   let currentVideoId = null;
+  let videoTitle = '';
 
   function getYoutubeId(url) {
     if (!url) return null;
@@ -286,12 +328,23 @@
     return null;
   }
 
+  // Отримуємо назву відео через YouTube API
+  async function getVideoTitle(videoId) {
+    try {
+      const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
+      const data = await response.json();
+      return data.title || videoId;
+    } catch {
+      return videoId;
+    }
+  }
+
   function loadVideo() {
     const url = document.getElementById('youtubeUrl').value.trim();
     const videoId = getYoutubeId(url);
     
     if (!videoId) {
-      alert('❌ Невірне посилання на YouTube');
+      showStatus('❌ Невірне посилання на YouTube', 'error');
       return;
     }
 
@@ -300,9 +353,18 @@
     iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
     document.getElementById('player').style.display = 'block';
     document.getElementById('downloadSection').style.display = 'block';
+
+    // Отримуємо назву для підстановки
+    getVideoTitle(videoId).then(title => {
+      videoTitle = title;
+      const filenameInput = document.getElementById('filenameInput');
+      if (filenameInput.value === 'my_music' || filenameInput.value === '') {
+        filenameInput.value = title.replace(/[^a-zA-Z0-9а-яА-Я\s]/g, '').trim().substring(0, 50);
+      }
+    });
   }
 
-  // ===== ГОЛОВНА ФУНКЦІЯ ПОШУКУ MP3 =====
+  // ===== ПОШУК MP3 =====
   async function findMP3() {
     const url = document.getElementById('youtubeUrl').value.trim();
     const videoId = getYoutubeId(url);
@@ -314,54 +376,72 @@
 
     const downloadBtn = document.getElementById('downloadBtn');
     const loader = document.getElementById('loader');
-    const statusMsg = document.getElementById('statusMessage');
+    const filename = document.getElementById('filenameInput').value.trim() || 'audio';
 
     downloadBtn.disabled = true;
     loader.style.display = 'block';
-    showStatus('⏳ Пошук MP3... Спробуємо кілька джерел', 'info');
+    showStatus('⏳ Пошук MP3...', 'info');
 
-    // Пробуємо кожен API
-    for (const api of APIS) {
-      try {
-        showStatus(`⏳ Спроба: ${api.name}...`, 'info');
-        
-        // Пробуємо напряму
-        let response = await fetch(api.url(videoId), {
-          signal: AbortSignal.timeout(8000)
-        });
-        
-        // Якщо не вийшло – через проксі
-        if (!response.ok) {
-          for (const proxy of PROXIES) {
-            try {
-              response = await fetch(proxy + api.url(videoId), {
-                signal: AbortSignal.timeout(10000)
-              });
-              if (response.ok) break;
-            } catch (e) {}
-          }
-        }
+    try {
+      // Спроба 1: напряму до API
+      let response = await fetch(API_URL + videoId, {
+        signal: AbortSignal.timeout(10000)
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          const link = api.parse(data);
-          
-          if (link && link.startsWith('http')) {
-            // Знайшли MP3!
-            window.open(link, '_blank');
-            showStatus(`✅ MP3 знайдено! Завантаження через ${api.name}...`, 'success');
-            loader.style.display = 'none';
-            downloadBtn.disabled = false;
-            return;
-          }
+      // Спроба 2: через проксі
+      if (!response.ok) {
+        for (const proxy of PROXIES) {
+          try {
+            response = await fetch(proxy + encodeURIComponent(API_URL + videoId), {
+              signal: AbortSignal.timeout(15000)
+            });
+            if (response.ok) break;
+          } catch (e) {}
         }
-      } catch (error) {
-        console.log(`API ${api.name} не відповів:`, error.message);
       }
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.link && data.status === 'success') {
+          // Скачуємо з правильною назвою
+          const link = data.link;
+          const fileName = `${filename}.mp3`;
+          
+          // Спроба скачати через createObjectURL
+          try {
+            const fileResponse = await fetch(link);
+            const blob = await fileResponse.blob();
+            const downloadUrl = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
+            showStatus(`✅ MP3 скачано: ${fileName}`, 'success');
+          } catch {
+            // Якщо не вийшло через blob - відкриваємо в новій вкладці
+            window.open(link, '_blank');
+            showStatus(`✅ MP3 знайдено! Відкрито в новій вкладці`, 'success');
+          }
+          
+          loader.style.display = 'none';
+          downloadBtn.disabled = false;
+          return;
+        }
+      }
+
+      // Якщо нічого не знайшли
+      showStatus('❌ Не вдалося знайти MP3. Спробуйте y2mate.is або loader.to', 'error');
+      
+    } catch (error) {
+      console.error('Помилка:', error);
+      showStatus('❌ Помилка з\'єднання. Спробуйте y2mate.is або loader.to', 'error');
     }
 
-    // Якщо нічого не знайшли
-    showStatus('❌ Не вдалося знайти MP3. Спробуйте y2mate.is або loader.to', 'error');
     loader.style.display = 'none';
     downloadBtn.disabled = false;
   }
@@ -369,7 +449,7 @@
   function showStatus(message, type) {
     const statusMsg = document.getElementById('statusMessage');
     statusMsg.textContent = message;
-    statusMsg.className = `status-message ${type}`;
+    statusMsg.className = `status-message show ${type}`;
   }
 
   // ===== ТАБИ =====
