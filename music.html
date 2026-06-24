@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎵 Завантажити MP3 з YouTube</title>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 40px;
+      max-width: 600px;
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 2rem;
+      text-align: center;
+      background: linear-gradient(135deg, #fff, #9b59b6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      text-align: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .input-group input {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.3s;
+    }
+    .input-group input:focus {
+      border-color: #9b59b6;
+      background: rgba(255,255,255,0.1);
+    }
+    .input-group input::placeholder {
+      color: rgba(255,255,255,0.3);
+    }
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      background: linear-gradient(135deg, #9b59b6, #e74c3c);
+      color: white;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(155,89,182,0.4);
+    }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    #result {
+      margin-top: 30px;
+      display: none;
+    }
+    .video-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+    .video-info img {
+      width: 80px;
+      height: 60px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .video-info .title {
+      color: white;
+      font-weight: 500;
+    }
+    .video-info .duration {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.8rem;
+    }
+    .download-btn {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+      background: linear-gradient(135deg, #2ecc71, #27ae60);
+      color: white;
+    }
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(46,204,113,0.4);
+    }
+    .loader {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    .loader-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #9b59b6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 15px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-text {
+      color: rgba(255,255,255,0.5);
+      font-size: 0.9rem;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 25px;
+      color: rgba(255,255,255,0.3);
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .back-link:hover {
+      color: rgba(255,255,255,0.7);
+    }
+    .error-message {
+      background: rgba(231,76,60,0.2);
+      border: 1px solid #e74c3c;
+      color: #e74c3c;
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-top: 15px;
+      display: none;
+    }
+    @media (max-width: 480px) {
+      .container { padding: 25px; }
+      .input-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎵 MP3 Downloader</h1>
+  <p class="subtitle">Вставте посилання на YouTube відео</p>
+
+  <div class="input-group">
+    <input type="text" id="youtubeUrl" placeholder="https://youtube.com/watch?v=...">
+    <button class="btn" id="convertBtn">Конвертувати</button>
+  </div>
+
+  <!-- Завантаження -->
+  <div class="loader" id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">⏳ Обробка відео...</div>
+  </div>
+
+  <!-- Результат -->
+  <div id="result">
+    <div class="video-info" id="videoInfo">
+      <img id="thumbnail" src="" alt="Thumbnail">
+      <div>
+        <div class="title" id="videoTitle">Назва відео</div>
+        <div class="duration" id="videoDuration">⏱️ 0:00</div>
+      </div>
+    </div>
+    <button class="download-btn" id="downloadBtn">⬇️ Завантажити MP3</button>
+  </div>
+
+  <!-- Помилка -->
+  <div class="error-message" id="errorMessage">❌ Сталася помилка. Спробуйте інше відео.</div>
+
+  <a href="index.html" class="back-link">← Повернутись до Watch Party</a>
+</div>
+
+<script>
+  const API_URL = 'https://api.vevioz.com/api/button/mp3/';
+
+  const urlInput = document.getElementById('youtubeUrl');
+  const convertBtn = document.getElementById('convertBtn');
+  const loader = document.getElementById('loader');
+  const resultDiv = document.getElementById('result');
+  const errorDiv = document.getElementById('errorMessage');
+
+  const thumbnail = document.getElementById('thumbnail');
+  const videoTitle = document.getElementById('videoTitle');
+  const videoDuration = document.getElementById('videoDuration');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  let currentDownloadUrl = null;
+
+  // Отримуємо ID з посилання YouTube
+  function getYoutubeId(url) {
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=)([^&]+)/,
+      /(?:youtu\.be\/)([^?]+)/,
+      /(?:youtube\.com\/embed\/)([^?]+)/
+    ];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  }
+
+  // Конвертуємо відео
+  async function convertVideo() {
+    const url = urlInput.value.trim();
+    if (!url) {
+      showError('Введіть посилання на YouTube відео');
+      return;
+    }
+
+    const videoId = getYoutubeId(url);
+    if (!videoId) {
+      showError('Невірне посилання на YouTube');
+      return;
+    }
+
+    // Показуємо завантаження
+    loader.style.display = 'block';
+    resultDiv.style.display = 'none';
+    errorDiv.style.display = 'none';
+    convertBtn.disabled = true;
+    convertBtn.textContent = '⏳ Завантаження...';
+
+    try {
+      const response = await fetch(API_URL + videoId);
+      const data = await response.json();
+
+      if (data.status === 'success' && data.link) {
+        currentDownloadUrl = data.link;
+        thumbnail.src = data.thumbnail || `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
+        videoTitle.textContent = data.title || 'Назва недоступна';
+        videoDuration.textContent = `⏱️ ${data.duration || '0:00'}`;
+        downloadBtn.onclick = () => window.open(currentDownloadUrl, '_blank');
+        resultDiv.style.display = 'block';
+        errorDiv.style.display = 'none';
+      } else {
+        showError('Не вдалося отримати MP3. Спробуйте інше відео.');
+      }
+    } catch (error) {
+      console.error('Помилка:', error);
+      showError('Помилка з\'єднання. Спробуйте пізніше.');
+    } finally {
+      loader.style.display = 'none';
+      convertBtn.disabled = false;
+      convertBtn.textContent = 'Конвертувати';
+    }
+  }
+
+  function showError(message) {
+    errorDiv.textContent = '❌ ' + message;
+    errorDiv.style.display = 'block';
+    resultDiv.style.display = 'none';
+  }
+
+  // Натискання Enter
+  urlInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') convertVideo();
+  });
+
+  convertBtn.addEventListener('click', convertVideo);
+</script>
+
+</body>
+</html>
