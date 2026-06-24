@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Watch Party</title>
+  <title>🎬 Cinema Night</title>
   
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,105 +19,202 @@
     }
 
     body {
-      font-family: 'Space Grotesk', sans-serif;
-      background: #0a0a0f;
-      color: #e0e0e0;
+      font-family: 'Inter', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    /* Анімований фон */
-    .bg-gradient {
+    /* ===== ФОН ===== */
+    .bg-scene {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(229, 9, 20, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 50%, rgba(155, 89, 182, 0.08) 0%, transparent 50%),
-        #0a0a0f;
       z-index: 0;
+      background: 
+        radial-gradient(ellipse at 50% 80%, rgba(229, 9, 20, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 20%, rgba(155, 89, 182, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(0, 150, 255, 0.06) 0%, transparent 50%),
+        #0a0a0a;
     }
 
+    .bg-scene .grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .bg-scene .scanline {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 3px,
+        rgba(255,255,255,0.01) 3px,
+        rgba(255,255,255,0.01) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* ===== ОСНОВНИЙ КОНТЕЙНЕР ===== */
     .container {
       position: relative;
       z-index: 1;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 30px 20px;
+      padding: 20px;
     }
 
-    /* Header */
+    /* ===== ХЕДЕР ===== */
     .header {
-      text-align: center;
-      padding: 40px 20px 30px;
-      margin-bottom: 40px;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0 30px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      flex-wrap: wrap;
+      gap: 15px;
     }
 
-    .header h1 {
-      font-size: 3.5rem;
-      font-weight: 700;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #e50914, #b20710);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 40px rgba(229, 9, 20, 0.2);
+    }
+
+    .logo-text {
+      font-family: 'Orbitron', monospace;
+      font-size: 1.6rem;
+      font-weight: 900;
       letter-spacing: -1px;
       background: linear-gradient(135deg, #ffffff 0%, #e50914 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      margin-bottom: 8px;
     }
 
-    .header p {
-      color: rgba(255,255,255,0.4);
-      font-size: 0.95rem;
-      font-weight: 300;
-      letter-spacing: 1px;
+    .logo-sub {
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 400;
+      margin-top: 2px;
     }
 
-    .header .badge {
-      display: inline-block;
-      margin-top: 12px;
-      padding: 4px 14px;
-      border-radius: 20px;
-      background: rgba(229, 9, 20, 0.15);
-      border: 1px solid rgba(229, 9, 20, 0.2);
+    /* ===== СТАТУС-ІНДИКАТОР ===== */
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 0.7rem;
-      color: #e50914;
+      color: rgba(255,255,255,0.3);
       letter-spacing: 1px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.05);
     }
 
-    /* Cards */
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4caf50;
+      animation: pulse-dot 2s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ===== ГЕРОЙ ===== */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: 4.5rem;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 0%, #e50914 40%, #9b59b6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.3);
+      margin-top: 16px;
+      letter-spacing: 2px;
+      font-weight: 300;
+    }
+
+    .hero .glow-line {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #e50914, transparent);
+      margin: 20px auto 0;
+    }
+
+    /* ===== КАРТКИ ===== */
     .card {
-      background: rgba(255,255,255,0.03);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 28px 30px;
+      background: rgba(255,255,255,0.02);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 28px 32px;
       margin-bottom: 20px;
-      border: 1px solid rgba(255,255,255,0.06);
-      transition: border-color 0.3s;
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.4s ease;
     }
 
     .card:hover {
-      border-color: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
     }
 
-    .card-title {
-      font-size: 0.85rem;
+    .card-label {
+      font-size: 0.6rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.3);
-      margin-bottom: 16px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.15);
+      margin-bottom: 14px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .card-title i {
+    .card-label i {
       color: #e50914;
-      font-size: 0.9rem;
+      font-size: 0.7rem;
     }
 
-    /* Inputs */
+    /* ===== ІНПУТИ ===== */
     .input-group {
       display: flex;
       gap: 12px;
@@ -126,70 +223,88 @@
 
     input {
       flex: 1;
-      padding: 14px 20px;
+      padding: 16px 22px;
       font-size: 0.95rem;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.03);
       color: #e0e0e0;
       transition: all 0.3s;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Inter', sans-serif;
       min-width: 200px;
     }
 
     input:focus {
       outline: none;
       border-color: #e50914;
-      background: rgba(255,255,255,0.07);
-      box-shadow: 0 0 25px rgba(229, 9, 20, 0.05);
+      background: rgba(255,255,255,0.05);
+      box-shadow: 0 0 30px rgba(229, 9, 20, 0.05);
     }
 
     input::placeholder {
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.15);
     }
 
+    /* ===== КНОПКИ ===== */
     .btn {
-      padding: 14px 28px;
-      font-size: 0.9rem;
+      padding: 16px 32px;
+      font-size: 0.85rem;
       font-weight: 600;
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       cursor: pointer;
       transition: all 0.3s;
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'Inter', sans-serif;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       white-space: nowrap;
+      letter-spacing: 0.5px;
     }
 
     .btn-primary {
       background: linear-gradient(135deg, #e50914, #b20710);
-      color: white;
+      color: #fff;
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(229, 9, 20, 0.3);
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 8px 40px rgba(229, 9, 20, 0.25);
     }
 
-    .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      color: #e0e0e0;
+    .btn-outline {
+      background: transparent;
+      color: rgba(255,255,255,0.6);
       border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255,255,255,0.15);
     }
 
-    /* Video */
+    /* ===== ВІДЕО ===== */
     .video-wrapper {
-      background: #000;
-      border-radius: 20px;
+      position: relative;
+      border-radius: 24px;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      background: #000;
+      border: 1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    }
+
+    .video-wrapper::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(229,9,20,0.1), transparent, rgba(155,89,182,0.1));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     video {
@@ -198,140 +313,222 @@
       background: #000;
     }
 
-    /* Status */
-    .status {
+    .video-overlay-info {
+      position: absolute;
+      bottom: 16px;
+      left: 20px;
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 2px;
+      pointer-events: none;
+      font-family: 'Orbitron', monospace;
+    }
+
+    /* ===== СТАТУС ===== */
+    .status-bar {
       margin-top: 16px;
       padding: 14px 20px;
-      border-radius: 14px;
-      font-size: 0.85rem;
+      border-radius: 16px;
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
+      gap: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.3s;
     }
 
-    .status i {
-      font-size: 0.9rem;
+    .status-bar .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
 
-    .status.success { color: #4caf50; border-color: rgba(76,175,80,0.15); }
-    .status.error { color: #f44336; border-color: rgba(244,67,54,0.15); }
-    .status.warning { color: #ff9800; border-color: rgba(255,152,0,0.15); }
-    .status.info { color: rgba(255,255,255,0.5); }
+    .status-bar.success .dot { background: #4caf50; }
+    .status-bar.error .dot { background: #f44336; }
+    .status-bar.warning .dot { background: #ff9800; }
+    .status-bar.info .dot { background: rgba(255,255,255,0.2); }
 
-    /* Room Badge */
+    /* ===== ROOM BADGE ===== */
     .room-badge {
       display: inline-block;
       margin-top: 14px;
-      padding: 6px 16px;
+      padding: 6px 18px;
       border-radius: 20px;
-      background: rgba(229, 9, 20, 0.12);
-      border: 1px solid rgba(229, 9, 20, 0.15);
-      font-size: 0.8rem;
+      background: rgba(229, 9, 20, 0.08);
+      border: 1px solid rgba(229, 9, 20, 0.1);
+      font-size: 0.75rem;
       color: #e50914;
+      letter-spacing: 0.5px;
     }
 
-    /* Footer */
+    /* ===== ФУТЕР ===== */
     .footer {
-      text-align: center;
-      padding: 40px 20px 20px;
-      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 30px 0 20px;
       margin-top: 40px;
-      color: rgba(255,255,255,0.2);
-      font-size: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.12);
       letter-spacing: 1px;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .footer a {
-      color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.2);
       text-decoration: none;
       transition: 0.3s;
     }
 
     .footer a:hover {
-      color: rgba(255,255,255,0.6);
+      color: rgba(255,255,255,0.5);
     }
 
-    /* Responsive */
+    .footer .social {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* ===== ТЕСТОВИЙ БЛОК ===== */
+    .test-block {
+      margin-top: 16px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.01);
+      border: 1px dashed rgba(255,255,255,0.04);
+      text-align: center;
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.12);
+      transition: 0.3s;
+    }
+
+    .test-block:hover {
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .test-block code {
+      background: rgba(255,255,255,0.03);
+      padding: 2px 10px;
+      border-radius: 6px;
+      font-size: 0.65rem;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ===== АДАПТИВ ===== */
     @media (max-width: 768px) {
-      .header h1 { font-size: 2.2rem; }
+      .hero h1 { font-size: 2.5rem; }
+      .header { flex-direction: column; align-items: flex-start; }
+      .logo-text { font-size: 1.4rem; }
       .input-group { flex-direction: column; }
       .btn { justify-content: center; }
       .card { padding: 20px; }
+      .footer { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2rem; }
+      .logo-icon { width: 40px; height: 40px; font-size: 1.1rem; }
     }
   </style>
 </head>
 <body>
 
-<div class="bg-gradient"></div>
+<!-- ===== ФОН ===== -->
+<div class="bg-scene">
+  <div class="grid"></div>
+  <div class="scanline"></div>
+</div>
 
+<!-- ===== ОСНОВНИЙ КОНТЕЙНЕР ===== -->
 <div class="container">
-  <div class="header">
-    <h1>watch party</h1>
-    <p>спільний перегляд фільмів та серіалів</p>
-    <div class="badge">✦ realtime sync</div>
+
+  <!-- ===== ХЕДЕР ===== -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon"><i class="fas fa-play"></i></div>
+      <div>
+        <div class="logo-text">CINEMA NIGHT</div>
+        <div class="logo-sub">✦ realtime sync</div>
+      </div>
+    </div>
+    <div class="status-indicator">
+      <span class="status-dot"></span>
+      <span>online</span>
+    </div>
+  </header>
+
+  <!-- ===== ГЕРОЙ ===== -->
+  <div class="hero">
+    <h1>watch together</h1>
+    <p>створіть кімнату та дивіться фільми з друзями в реальному часі</p>
+    <div class="glow-line"></div>
   </div>
 
+  <!-- ===== КІМНАТА ===== -->
   <div class="card">
-    <div class="card-title">
-      <i class="fas fa-door-open"></i>
-      <span>Кімната</span>
+    <div class="card-label">
+      <i class="fas fa-door-open"></i> кімната
     </div>
     <div class="input-group">
-      <input type="text" id="room" placeholder="назва кімнати (наприклад: anime-night)">
+      <input type="text" id="room" placeholder="назва кімнати">
       <button class="btn btn-primary" onclick="joinRoom()">
-        <i class="fas fa-sign-in-alt"></i> Join
+        <i class="fas fa-sign-in-alt"></i> join
       </button>
     </div>
     <div id="roomDisplay" class="room-badge" style="display: none;"></div>
   </div>
 
+  <!-- ===== ВІДЕО ===== -->
   <div class="card">
-    <div class="card-title">
-      <i class="fas fa-link"></i>
-      <span>Відео</span>
+    <div class="card-label">
+      <i class="fas fa-link"></i> джерело
     </div>
     <div class="input-group">
       <input type="text" id="videoUrl" placeholder="посилання на .mp4 відео">
       <button class="btn btn-primary" onclick="setVideo()">
-        <i class="fas fa-play"></i> Load
+        <i class="fas fa-play"></i> load
       </button>
     </div>
   </div>
 
+  <!-- ===== ПЛЕЄР ===== -->
   <div class="video-wrapper">
     <video id="video" controls></video>
+    <div class="video-overlay-info">◆ now playing</div>
   </div>
 
-  <div id="status" class="status info">
-    <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
+  <!-- ===== СТАТУС ===== -->
+  <div id="status" class="status-bar info">
+    <span class="dot"></span>
     <span>готовий до роботи</span>
   </div>
 
-  <div style="margin-top: 20px; padding: 16px 20px; border-radius: 14px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04); text-align: center; font-size: 0.8rem; color: rgba(255,255,255,0.3);">
-    <i class="fas fa-users" style="margin-right: 6px;"></i>
-    1️⃣ Введіть кімнату → Join &nbsp;·&nbsp;
-    <i class="fas fa-video" style="margin-right: 6px;"></i>
-    2️⃣ Вставте .mp4 → Load &nbsp;·&nbsp;
-    <i class="fas fa-share-alt" style="margin-right: 6px;"></i>
-    3️⃣ Дайте другу URL
-    <br><br>
-    <span style="font-size: 0.7rem; color: rgba(255,255,255,0.15);">
-      тестове: https://www.w3schools.com/html/mov_bbb.mp4
-    </span>
+  <!-- ===== ТЕСТОВИЙ БЛОК ===== -->
+  <div class="test-block">
+    <i class="fas fa-flask" style="margin-right: 6px;"></i>
+    тестове відео: <code>https://www.w3schools.com/html/mov_bbb.mp4</code>
   </div>
 
-  <div class="footer">
-    <a href="https://github.com/ckeketon" target="_blank">github</a> &nbsp;·&nbsp; watch party
-  </div>
+  <!-- ===== ФУТЕР ===== -->
+  <footer class="footer">
+    <span>© 2024 cinema night</span>
+    <div class="social">
+      <a href="#">github</a>
+      <a href="#">about</a>
+    </div>
+  </footer>
 </div>
 
+<!-- ===== FIREBASE ===== -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// Firebase Config
+// ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
@@ -348,12 +545,17 @@ const db = firebase.database();
 let roomRef = null;
 let isUpdating = false;
 const video = document.getElementById("video");
-const statusDiv = document.getElementById("status");
-const roomDisplay = document.getElementById("roomDisplay");
+const statusEl = document.getElementById("status");
 
 function updateStatus(message, type = "info") {
-  statusDiv.innerHTML = `<i class="fas fa-circle" style="font-size: 0.5rem;"></i><span>${message}</span>`;
-  statusDiv.className = `status ${type}`;
+  const dotColors = {
+    success: '#4caf50',
+    error: '#f44336',
+    warning: '#ff9800',
+    info: 'rgba(255,255,255,0.2)'
+  };
+  statusEl.innerHTML = `<span class="dot" style="background:${dotColors[type] || dotColors.info};"></span><span>${message}</span>`;
+  statusEl.className = `status-bar ${type}`;
   console.log(`[${type}] ${message}`);
 }
 
@@ -378,8 +580,8 @@ window.joinRoom = function() {
     }
     
     updateStatus(`в кімнаті: ${room}`, "success");
-    roomDisplay.style.display = "inline-block";
-    roomDisplay.innerHTML = `<i class="fas fa-hashtag"></i> ${room}`;
+    document.getElementById("roomDisplay").style.display = "inline-block";
+    document.getElementById("roomDisplay").innerHTML = `<i class="fas fa-hashtag"></i> ${room}`;
     isUpdating = true;
     
     if (data.video && video.src !== data.video) {
