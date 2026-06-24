@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>🎬 Cinema Night</title>
+  <title>🌿 Woodland Cinema</title>
   
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -19,48 +17,69 @@
     }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: #0a0a0a;
-      color: #ffffff;
+      font-family: 'Cormorant Garamond', serif;
+      background: #0d0a08;
+      color: #d4c9b8;
       min-height: 100vh;
       overflow-x: hidden;
     }
 
     /* ===== ФОН ===== */
-    .bg-scene {
+    .bg-forest {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: 
+        radial-gradient(ellipse at 50% 100%, rgba(34, 60, 30, 0.3) 0%, transparent 70%),
+        radial-gradient(ellipse at 30% 50%, rgba(60, 40, 20, 0.2) 0%, transparent 50%),
+        #0d0a08;
+    }
+
+    .bg-forest::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(200, 180, 120, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(100, 60, 30, 0.05) 0%, transparent 40%);
+    }
+
+    /* Лісова листва згори */
+    .forest-canopy {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 120px;
       z-index: 0;
-      background: 
-        radial-gradient(ellipse at 50% 80%, rgba(229, 9, 20, 0.12) 0%, transparent 60%),
-        radial-gradient(ellipse at 20% 20%, rgba(155, 89, 182, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(0, 150, 255, 0.06) 0%, transparent 50%),
-        #0a0a0a;
-    }
-
-    .bg-scene .grid {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    .bg-scene .scanline {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 3px,
-        rgba(255,255,255,0.01) 3px,
-        rgba(255,255,255,0.01) 4px
-      );
       pointer-events: none;
+      background: 
+        radial-gradient(ellipse at 10% 0%, rgba(30, 60, 20, 0.15) 0%, transparent 60%),
+        radial-gradient(ellipse at 50% 0%, rgba(40, 70, 30, 0.1) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 0%, rgba(30, 60, 20, 0.15) 0%, transparent 60%);
+    }
+
+    /* Вогники світлячків (анімація) */
+    .fireflies {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .firefly {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(255, 220, 150, 0.6);
+      border-radius: 50%;
+      box-shadow: 0 0 12px rgba(255, 220, 150, 0.3);
+      animation: float-firefly 8s infinite ease-in-out;
+    }
+
+    @keyframes float-firefly {
+      0%, 100% { transform: translate(0, 0) scale(0.5); opacity: 0.1; }
+      50% { transform: translate(30px, -60px) scale(1); opacity: 0.8; }
     }
 
     /* ===== ОСНОВНИЙ КОНТЕЙНЕР ===== */
@@ -69,7 +88,7 @@
       z-index: 1;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 30px 20px;
     }
 
     /* ===== ХЕДЕР ===== */
@@ -78,7 +97,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 20px 0 30px;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(180, 150, 100, 0.1);
       flex-wrap: wrap;
       gap: 15px;
     }
@@ -92,117 +111,122 @@
     .logo-icon {
       width: 48px;
       height: 48px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #e50914, #b20710);
+      border-radius: 50%;
+      background: radial-gradient(ellipse at 30% 30%, #5a7a4a, #2a3a1a);
+      border: 1px solid rgba(180, 150, 100, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      box-shadow: 0 0 40px rgba(229, 9, 20, 0.2);
+      font-size: 1.3rem;
+      color: #d4c9b8;
+      box-shadow: 0 0 40px rgba(180, 150, 100, 0.05);
     }
 
     .logo-text {
-      font-family: 'Orbitron', monospace;
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: -1px;
-      background: linear-gradient(135deg, #ffffff 0%, #e50914 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #e8dcc8;
+      letter-spacing: 3px;
+    }
+
+    .logo-text span {
+      color: #8a7a5a;
     }
 
     .logo-sub {
       font-size: 0.55rem;
-      color: rgba(255,255,255,0.2);
-      letter-spacing: 4px;
+      color: rgba(180, 150, 100, 0.25);
+      letter-spacing: 6px;
       text-transform: uppercase;
-      font-weight: 400;
+      font-weight: 300;
       margin-top: 2px;
     }
 
-    /* ===== СТАТУС-ІНДИКАТОР ===== */
+    /* ===== СТАТУС ===== */
     .status-indicator {
       display: flex;
       align-items: center;
       gap: 8px;
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.3);
-      letter-spacing: 1px;
-      padding: 8px 16px;
+      color: rgba(180, 150, 100, 0.25);
+      letter-spacing: 2px;
+      padding: 6px 16px;
       border-radius: 20px;
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.05);
+      border: 1px solid rgba(180, 150, 100, 0.05);
+      font-weight: 300;
     }
 
     .status-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
-      background: #4caf50;
-      animation: pulse-dot 2s infinite;
+      background: #5a7a4a;
+      animation: pulse-leaf 3s infinite;
     }
 
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
+    @keyframes pulse-leaf {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.7); }
     }
 
     /* ===== ГЕРОЙ ===== */
     .hero {
       text-align: center;
-      padding: 60px 20px 40px;
+      padding: 50px 20px 30px;
     }
 
     .hero h1 {
-      font-family: 'Orbitron', monospace;
-      font-size: 4.5rem;
-      font-weight: 900;
-      letter-spacing: -2px;
-      line-height: 1.1;
-      background: linear-gradient(135deg, #ffffff 0%, #e50914 40%, #9b59b6 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 3.8rem;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: #e8dcc8;
+      text-shadow: 0 0 60px rgba(180, 150, 100, 0.05);
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: #8a7a5a;
     }
 
     .hero p {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.3);
+      font-size: 1.05rem;
+      color: rgba(180, 150, 100, 0.3);
       margin-top: 16px;
-      letter-spacing: 2px;
+      letter-spacing: 4px;
       font-weight: 300;
     }
 
-    .hero .glow-line {
-      width: 60px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #e50914, transparent);
-      margin: 20px auto 0;
+    .hero .divider {
+      width: 80px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(180, 150, 100, 0.2), transparent);
+      margin: 24px auto 0;
     }
 
     /* ===== КАРТКИ ===== */
     .card {
-      background: rgba(255,255,255,0.02);
-      backdrop-filter: blur(20px);
-      border-radius: 24px;
+      background: rgba(20, 18, 14, 0.6);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
       padding: 28px 32px;
       margin-bottom: 20px;
-      border: 1px solid rgba(255,255,255,0.04);
-      transition: all 0.4s ease;
+      border: 1px solid rgba(180, 150, 100, 0.05);
+      transition: all 0.5s ease;
     }
 
     .card:hover {
-      border-color: rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
+      border-color: rgba(180, 150, 100, 0.1);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
     }
 
     .card-label {
       font-size: 0.6rem;
-      font-weight: 600;
+      font-weight: 300;
       text-transform: uppercase;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.15);
+      letter-spacing: 4px;
+      color: rgba(180, 150, 100, 0.15);
       margin-bottom: 14px;
       display: flex;
       align-items: center;
@@ -210,7 +234,7 @@
     }
 
     .card-label i {
-      color: #e50914;
+      color: #5a7a4a;
       font-size: 0.7rem;
     }
 
@@ -223,83 +247,87 @@
 
     input {
       flex: 1;
-      padding: 16px 22px;
+      padding: 14px 22px;
       font-size: 0.95rem;
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      background: rgba(255,255,255,0.03);
-      color: #e0e0e0;
-      transition: all 0.3s;
-      font-family: 'Inter', sans-serif;
+      border: 1px solid rgba(180, 150, 100, 0.06);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.02);
+      color: #d4c9b8;
+      transition: all 0.4s;
+      font-family: 'Cormorant Garamond', serif;
       min-width: 200px;
+      font-weight: 300;
     }
 
     input:focus {
       outline: none;
-      border-color: #e50914;
-      background: rgba(255,255,255,0.05);
-      box-shadow: 0 0 30px rgba(229, 9, 20, 0.05);
+      border-color: rgba(180, 150, 100, 0.15);
+      background: rgba(255,255,255,0.03);
+      box-shadow: 0 0 40px rgba(180, 150, 100, 0.02);
     }
 
     input::placeholder {
-      color: rgba(255,255,255,0.15);
+      color: rgba(180, 150, 100, 0.1);
+      font-weight: 300;
     }
 
     /* ===== КНОПКИ ===== */
     .btn {
-      padding: 16px 32px;
+      padding: 14px 32px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 500;
       border: none;
-      border-radius: 16px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: all 0.3s;
-      font-family: 'Inter', sans-serif;
+      transition: all 0.4s;
+      font-family: 'Cormorant Garamond', serif;
       display: inline-flex;
       align-items: center;
       gap: 10px;
       white-space: nowrap;
-      letter-spacing: 0.5px;
+      letter-spacing: 2px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #e50914, #b20710);
-      color: #fff;
+      background: linear-gradient(135deg, #3a4a2a, #2a3a1a);
+      color: #e8dcc8;
+      border: 1px solid rgba(180, 150, 100, 0.05);
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px) scale(1.01);
-      box-shadow: 0 8px 40px rgba(229, 9, 20, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(40, 60, 30, 0.2);
+      border-color: rgba(180, 150, 100, 0.1);
     }
 
     .btn-outline {
       background: transparent;
-      color: rgba(255,255,255,0.6);
-      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(180, 150, 100, 0.2);
+      border: 1px solid rgba(180, 150, 100, 0.05);
     }
 
     .btn-outline:hover {
-      background: rgba(255,255,255,0.04);
-      border-color: rgba(255,255,255,0.15);
+      border-color: rgba(180, 150, 100, 0.1);
+      color: rgba(180, 150, 100, 0.4);
     }
 
     /* ===== ВІДЕО ===== */
     .video-wrapper {
       position: relative;
-      border-radius: 24px;
+      border-radius: 16px;
       overflow: hidden;
-      background: #000;
-      border: 1px solid rgba(255,255,255,0.04);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      background: #0a0806;
+      border: 1px solid rgba(180, 150, 100, 0.05);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
 
-    .video-wrapper::before {
+    .video-wrapper::after {
       content: '';
       position: absolute;
       inset: 0;
-      border-radius: 24px;
+      border-radius: 16px;
       padding: 1px;
-      background: linear-gradient(135deg, rgba(229,9,20,0.1), transparent, rgba(155,89,182,0.1));
+      background: linear-gradient(135deg, rgba(180, 150, 100, 0.05), transparent, rgba(180, 150, 100, 0.05));
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -310,57 +338,75 @@
     video {
       width: 100%;
       display: block;
-      background: #000;
+      background: #0a0806;
     }
 
     .video-overlay-info {
       position: absolute;
       bottom: 16px;
       left: 20px;
-      font-size: 0.6rem;
-      color: rgba(255,255,255,0.15);
-      letter-spacing: 2px;
+      font-size: 0.5rem;
+      color: rgba(180, 150, 100, 0.08);
+      letter-spacing: 4px;
       pointer-events: none;
-      font-family: 'Orbitron', monospace;
+      font-family: 'Cinzel Decorative', serif;
     }
 
     /* ===== СТАТУС ===== */
     .status-bar {
       margin-top: 16px;
       padding: 14px 20px;
-      border-radius: 16px;
-      font-size: 0.8rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
       gap: 12px;
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(20, 18, 14, 0.3);
+      border: 1px solid rgba(180, 150, 100, 0.03);
       transition: all 0.3s;
+      font-weight: 300;
     }
 
     .status-bar .dot {
-      width: 5px;
-      height: 5px;
+      width: 4px;
+      height: 4px;
       border-radius: 50%;
       flex-shrink: 0;
     }
 
-    .status-bar.success .dot { background: #4caf50; }
-    .status-bar.error .dot { background: #f44336; }
-    .status-bar.warning .dot { background: #ff9800; }
-    .status-bar.info .dot { background: rgba(255,255,255,0.2); }
+    .status-bar.success .dot { background: #5a7a4a; }
+    .status-bar.error .dot { background: #8a4a3a; }
+    .status-bar.warning .dot { background: #8a7a3a; }
+    .status-bar.info .dot { background: rgba(180, 150, 100, 0.1); }
 
     /* ===== ROOM BADGE ===== */
     .room-badge {
       display: inline-block;
       margin-top: 14px;
-      padding: 6px 18px;
+      padding: 4px 18px;
       border-radius: 20px;
-      background: rgba(229, 9, 20, 0.08);
-      border: 1px solid rgba(229, 9, 20, 0.1);
-      font-size: 0.75rem;
-      color: #e50914;
-      letter-spacing: 0.5px;
+      background: rgba(40, 60, 30, 0.08);
+      border: 1px solid rgba(180, 150, 100, 0.05);
+      font-size: 0.7rem;
+      color: rgba(180, 150, 100, 0.2);
+      letter-spacing: 2px;
+    }
+
+    /* ===== ТЕСТОВИЙ БЛОК ===== */
+    .test-block {
+      margin-top: 16px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.65rem;
+      color: rgba(180, 150, 100, 0.06);
+      font-weight: 300;
+      letter-spacing: 2px;
+    }
+
+    .test-block code {
+      font-family: 'Cormorant Garamond', serif;
+      color: rgba(180, 150, 100, 0.08);
     }
 
     /* ===== ФУТЕР ===== */
@@ -370,22 +416,22 @@
       align-items: center;
       padding: 30px 0 20px;
       margin-top: 40px;
-      border-top: 1px solid rgba(255,255,255,0.03);
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.12);
-      letter-spacing: 1px;
+      border-top: 1px solid rgba(180, 150, 100, 0.03);
+      font-size: 0.65rem;
+      color: rgba(180, 150, 100, 0.06);
+      letter-spacing: 3px;
       flex-wrap: wrap;
       gap: 10px;
     }
 
     .footer a {
-      color: rgba(255,255,255,0.2);
+      color: rgba(180, 150, 100, 0.08);
       text-decoration: none;
       transition: 0.3s;
     }
 
     .footer a:hover {
-      color: rgba(255,255,255,0.5);
+      color: rgba(180, 150, 100, 0.2);
     }
 
     .footer .social {
@@ -393,36 +439,11 @@
       gap: 20px;
     }
 
-    /* ===== ТЕСТОВИЙ БЛОК ===== */
-    .test-block {
-      margin-top: 16px;
-      padding: 12px 18px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.01);
-      border: 1px dashed rgba(255,255,255,0.04);
-      text-align: center;
-      font-size: 0.7rem;
-      color: rgba(255,255,255,0.12);
-      transition: 0.3s;
-    }
-
-    .test-block:hover {
-      border-color: rgba(255,255,255,0.08);
-    }
-
-    .test-block code {
-      background: rgba(255,255,255,0.03);
-      padding: 2px 10px;
-      border-radius: 6px;
-      font-size: 0.65rem;
-      color: rgba(255,255,255,0.2);
-    }
-
     /* ===== АДАПТИВ ===== */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 2.5rem; }
+      .hero h1 { font-size: 2.2rem; letter-spacing: 4px; }
       .header { flex-direction: column; align-items: flex-start; }
-      .logo-text { font-size: 1.4rem; }
+      .logo-text { font-size: 1.2rem; }
       .input-group { flex-direction: column; }
       .btn { justify-content: center; }
       .card { padding: 20px; }
@@ -430,18 +451,19 @@
     }
 
     @media (max-width: 480px) {
-      .hero h1 { font-size: 2rem; }
-      .logo-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+      .hero h1 { font-size: 1.8rem; }
+      .logo-icon { width: 40px; height: 40px; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
 
 <!-- ===== ФОН ===== -->
-<div class="bg-scene">
-  <div class="grid"></div>
-  <div class="scanline"></div>
-</div>
+<div class="bg-forest"></div>
+<div class="forest-canopy"></div>
+
+<!-- ===== СВІТЛЯЧКИ ===== -->
+<div class="fireflies" id="fireflies"></div>
 
 <!-- ===== ОСНОВНИЙ КОНТЕЙНЕР ===== -->
 <div class="container">
@@ -449,34 +471,34 @@
   <!-- ===== ХЕДЕР ===== -->
   <header class="header">
     <div class="logo">
-      <div class="logo-icon"><i class="fas fa-play"></i></div>
+      <div class="logo-icon"><i class="fas fa-leaf"></i></div>
       <div>
-        <div class="logo-text">CINEMA NIGHT</div>
-        <div class="logo-sub">✦ realtime sync</div>
+        <div class="logo-text">Woodland <span>Cinema</span></div>
+        <div class="logo-sub">✦ among the ancient trees</div>
       </div>
     </div>
     <div class="status-indicator">
       <span class="status-dot"></span>
-      <span>online</span>
+      <span>the forest hears</span>
     </div>
   </header>
 
   <!-- ===== ГЕРОЙ ===== -->
   <div class="hero">
-    <h1>watch together</h1>
-    <p>створіть кімнату та дивіться фільми з друзями в реальному часі</p>
-    <div class="glow-line"></div>
+    <h1>watch <em>together</em></h1>
+    <p>gather beneath the canopy & share the stories of the silver screen</p>
+    <div class="divider"></div>
   </div>
 
   <!-- ===== КІМНАТА ===== -->
   <div class="card">
     <div class="card-label">
-      <i class="fas fa-door-open"></i> кімната
+      <i class="fas fa-door-open"></i> the gathering
     </div>
     <div class="input-group">
-      <input type="text" id="room" placeholder="назва кімнати">
+      <input type="text" id="room" placeholder="name of the glade">
       <button class="btn btn-primary" onclick="joinRoom()">
-        <i class="fas fa-sign-in-alt"></i> join
+        <i class="fas fa-sign-in-alt"></i> enter
       </button>
     </div>
     <div id="roomDisplay" class="room-badge" style="display: none;"></div>
@@ -485,12 +507,12 @@
   <!-- ===== ВІДЕО ===== -->
   <div class="card">
     <div class="card-label">
-      <i class="fas fa-link"></i> джерело
+      <i class="fas fa-link"></i> the tale
     </div>
     <div class="input-group">
-      <input type="text" id="videoUrl" placeholder="посилання на .mp4 відео">
+      <input type="text" id="videoUrl" placeholder="path to the .mp4">
       <button class="btn btn-primary" onclick="setVideo()">
-        <i class="fas fa-play"></i> load
+        <i class="fas fa-play"></i> unfold
       </button>
     </div>
   </div>
@@ -498,27 +520,27 @@
   <!-- ===== ПЛЕЄР ===== -->
   <div class="video-wrapper">
     <video id="video" controls></video>
-    <div class="video-overlay-info">◆ now playing</div>
+    <div class="video-overlay-info">✦ now unfolding</div>
   </div>
 
   <!-- ===== СТАТУС ===== -->
   <div id="status" class="status-bar info">
     <span class="dot"></span>
-    <span>готовий до роботи</span>
+    <span>awaiting the story</span>
   </div>
 
   <!-- ===== ТЕСТОВИЙ БЛОК ===== -->
   <div class="test-block">
     <i class="fas fa-flask" style="margin-right: 6px;"></i>
-    тестове відео: <code>https://www.w3schools.com/html/mov_bbb.mp4</code>
+    test: <code>https://www.w3schools.com/html/mov_bbb.mp4</code>
   </div>
 
   <!-- ===== ФУТЕР ===== -->
   <footer class="footer">
-    <span>© 2024 cinema night</span>
+    <span>✦ in the heart of the forest</span>
     <div class="social">
-      <a href="#">github</a>
-      <a href="#">about</a>
+      <a href="#">whispers</a>
+      <a href="#">legends</a>
     </div>
   </footer>
 </div>
@@ -528,6 +550,23 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
+// ===== СВІТЛЯЧКИ =====
+function createFireflies() {
+  const container = document.getElementById('fireflies');
+  for (let i = 0; i < 30; i++) {
+    const firefly = document.createElement('div');
+    firefly.className = 'firefly';
+    firefly.style.left = Math.random() * 100 + '%';
+    firefly.style.top = Math.random() * 100 + '%';
+    firefly.style.animationDelay = Math.random() * 8 + 's';
+    firefly.style.animationDuration = 6 + Math.random() * 6 + 's';
+    firefly.style.width = (2 + Math.random() * 3) + 'px';
+    firefly.style.height = firefly.style.width;
+    container.appendChild(firefly);
+  }
+}
+createFireflies();
+
 // ===== FIREBASE =====
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
@@ -549,10 +588,10 @@ const statusEl = document.getElementById("status");
 
 function updateStatus(message, type = "info") {
   const dotColors = {
-    success: '#4caf50',
-    error: '#f44336',
-    warning: '#ff9800',
-    info: 'rgba(255,255,255,0.2)'
+    success: '#5a7a4a',
+    error: '#8a4a3a',
+    warning: '#8a7a3a',
+    info: 'rgba(180, 150, 100, 0.1)'
   };
   statusEl.innerHTML = `<span class="dot" style="background:${dotColors[type] || dotColors.info};"></span><span>${message}</span>`;
   statusEl.className = `status-bar ${type}`;
@@ -562,7 +601,7 @@ function updateStatus(message, type = "info") {
 window.joinRoom = function() {
   const room = document.getElementById("room").value.trim();
   if (!room) {
-    updateStatus("введіть назву кімнати!", "error");
+    updateStatus("a glade must have a name...", "error");
     return;
   }
   
@@ -575,19 +614,19 @@ window.joinRoom = function() {
     console.log("Отримано:", data);
     
     if (!data) {
-      updateStatus(`кімната "${room}" порожня. завантажте відео.`, "warning");
+      updateStatus(`the glade "${room}" awaits a tale`, "warning");
       return;
     }
     
-    updateStatus(`в кімнаті: ${room}`, "success");
+    updateStatus(`gathered in: ${room}`, "success");
     document.getElementById("roomDisplay").style.display = "inline-block";
-    document.getElementById("roomDisplay").innerHTML = `<i class="fas fa-hashtag"></i> ${room}`;
+    document.getElementById("roomDisplay").innerHTML = `<i class="fas fa-leaf"></i> ${room}`;
     isUpdating = true;
     
     if (data.video && video.src !== data.video) {
       video.src = data.video;
       video.load();
-      updateStatus("відео завантажено", "success");
+      updateStatus("the story unfolds", "success");
     }
     
     if (data.time !== undefined && Math.abs(video.currentTime - data.time) > 1) {
@@ -595,7 +634,7 @@ window.joinRoom = function() {
     }
     
     if (data.playing) {
-      video.play().catch(() => updateStatus("натисніть Play на відео", "warning"));
+      video.play().catch(() => updateStatus("touch the story to begin", "warning"));
     } else {
       video.pause();
     }
@@ -603,31 +642,31 @@ window.joinRoom = function() {
     isUpdating = false;
   });
   
-  updateStatus(`приєднано до "${room}"`, "success");
+  updateStatus(`entered the glade "${room}"`, "success");
 };
 
 window.setVideo = function() {
   if (!roomRef) {
-    updateStatus("спочатку натисніть Join!", "error");
+    updateStatus("first, enter a glade", "error");
     return;
   }
   
   const url = document.getElementById("videoUrl").value.trim();
   if (!url) {
-    updateStatus("вставте посилання на відео!", "error");
+    updateStatus("a tale must be chosen", "error");
     return;
   }
   
-  updateStatus("відправка...", "info");
+  updateStatus("sharing the tale...", "info");
   
   roomRef.set({
     video: url,
     time: 0,
     playing: false
   }).then(() => {
-    updateStatus("відео відправлено!", "success");
+    updateStatus("the tale has been shared!", "success");
   }).catch((error) => {
-    updateStatus(`помилка: ${error.message}`, "error");
+    updateStatus(`error: ${error.message}`, "error");
   });
 };
 
@@ -649,7 +688,7 @@ video.addEventListener("seeked", () => {
   }
 });
 
-updateStatus("готовий до роботи", "info");
+updateStatus("the forest is listening...", "info");
 </script>
 
 </body>
