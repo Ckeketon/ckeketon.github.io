@@ -25,7 +25,6 @@
       color: white;
     }
 
-    /* Анімований фон */
     .bg-animation {
       position: fixed;
       top: 0;
@@ -46,14 +45,8 @@
     }
 
     @keyframes float {
-      0% {
-        transform: translateY(100vh) scale(0);
-        opacity: 0;
-      }
-      100% {
-        transform: translateY(-100vh) scale(1);
-        opacity: 1;
-      }
+      0% { transform: translateY(100vh) scale(0); opacity: 0; }
+      100% { transform: translateY(-100vh) scale(1); opacity: 1; }
     }
 
     .container {
@@ -64,7 +57,6 @@
       padding: 20px;
     }
 
-    /* Header */
     .header {
       text-align: center;
       padding: 30px 20px;
@@ -73,7 +65,6 @@
       border-radius: 20px;
       margin-bottom: 30px;
       border: 1px solid rgba(255, 255, 255, 0.1);
-      position: relative;
     }
 
     .header h1 {
@@ -90,38 +81,6 @@
       font-size: 1rem;
     }
 
-    /* ===== КНОПКА MP3 СПРАВА ЗВЕРХУ ===== */
-    .mp3-btn {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: rgba(155, 89, 182, 0.2);
-      border: 1px solid #9b59b6;
-      color: #9b59b6;
-      padding: 10px 18px;
-      border-radius: 25px;
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      transition: all 0.3s;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(10px);
-    }
-
-    .mp3-btn:hover {
-      background: #9b59b6;
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(155, 89, 182, 0.4);
-    }
-
-    .mp3-btn i {
-      font-size: 1rem;
-    }
-
-    /* Cards */
     .card {
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(10px);
@@ -151,7 +110,6 @@
       font-size: 1.3rem;
     }
 
-    /* Inputs */
     .input-group {
       display: flex;
       gap: 10px;
@@ -180,7 +138,6 @@
       color: rgba(255, 255, 255, 0.5);
     }
 
-    /* Buttons */
     .btn {
       padding: 12px 24px;
       font-size: 1rem;
@@ -205,18 +162,6 @@
       box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
     }
 
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    /* Video Container */
     .video-wrapper {
       position: relative;
       background: #000;
@@ -231,7 +176,6 @@
       background: black;
     }
 
-    /* Status */
     .status {
       margin-top: 15px;
       padding: 12px;
@@ -240,10 +184,6 @@
       display: flex;
       align-items: center;
       gap: 10px;
-    }
-
-    .status i {
-      font-size: 1.1rem;
     }
 
     .status.success {
@@ -270,7 +210,6 @@
       color: #2196f3;
     }
 
-    /* Info Box */
     .info-box {
       background: rgba(0, 0, 0, 0.3);
       border-radius: 12px;
@@ -281,11 +220,6 @@
       color: rgba(255, 255, 255, 0.6);
     }
 
-    .info-box i {
-      margin: 0 5px;
-    }
-
-    /* Room badge */
     .room-badge {
       display: inline-block;
       background: rgba(229, 9, 20, 0.2);
@@ -296,23 +230,11 @@
       margin-top: 10px;
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
       .header h1 { font-size: 2rem; }
       .input-group { flex-direction: column; }
       .btn { justify-content: center; }
       .card { padding: 15px; }
-      .mp3-btn {
-        position: static;
-        margin: 15px auto 0;
-        display: inline-flex;
-        justify-content: center;
-      }
-      .header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
     }
   </style>
 </head>
@@ -324,11 +246,6 @@
   <div class="header">
     <h1><i class="fas fa-film"></i> Watch Party</h1>
     <p>Дивись фільми та серіали разом з друзями</p>
-    
-    <!-- ===== КНОПКА MP3 СПРАВА ЗВЕРХУ ===== -->
-    <a href="music.html" class="mp3-btn">
-      <i class="fas fa-music"></i> MP3
-    </a>
   </div>
 
   <div class="card">
@@ -372,7 +289,7 @@
     <i class="fas fa-video"></i> 2️⃣ Вставте .mp4 посилання → Load &nbsp;&nbsp;|&nbsp;&nbsp;
     <i class="fas fa-share-alt"></i> 3️⃣ Дайте другу URL та назву кімнати
     <br><br>
-    <i class="fas fa-flask"></i> Тестове відеo: 
+    <i class="fas fa-flask"></i> Тестове відео: 
     <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 6px;">https://www.w3schools.com/html/mov_bbb.mp4</code>
   </div>
 </div>
@@ -381,7 +298,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// Анімація фону
 function createStars() {
   const bg = document.getElementById('bgAnimation');
   for (let i = 0; i < 100; i++) {
@@ -395,7 +311,6 @@ function createStars() {
 }
 createStars();
 
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
