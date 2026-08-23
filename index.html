@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>🌿 Woodland Cinema</title>
+  <title>Watch Party — дивись разом</title>
   
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -17,557 +19,335 @@
     }
 
     body {
-      font-family: 'Cormorant Garamond', serif;
-      background: #0d0a08;
-      color: #d4c9b8;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
       min-height: 100vh;
-      overflow-x: hidden;
+      color: white;
     }
 
-    /* ===== ФОН ===== */
-    .bg-forest {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background: 
-        radial-gradient(ellipse at 50% 100%, rgba(34, 60, 30, 0.3) 0%, transparent 70%),
-        radial-gradient(ellipse at 30% 50%, rgba(60, 40, 20, 0.2) 0%, transparent 50%),
-        #0d0a08;
-    }
-
-    .bg-forest::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: 
-        radial-gradient(circle at 10% 20%, rgba(200, 180, 120, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(100, 60, 30, 0.05) 0%, transparent 40%);
-    }
-
-    /* Лісова листва згори */
-    .forest-canopy {
+    /* Анімований фон */
+    .bg-animation {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 120px;
+      height: 100%;
       z-index: 0;
-      pointer-events: none;
-      background: 
-        radial-gradient(ellipse at 10% 0%, rgba(30, 60, 20, 0.15) 0%, transparent 60%),
-        radial-gradient(ellipse at 50% 0%, rgba(40, 70, 30, 0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 90% 0%, rgba(30, 60, 20, 0.15) 0%, transparent 60%);
+      overflow: hidden;
     }
 
-    /* Вогники світлячків (анімація) */
-    .fireflies {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .firefly {
+    .bg-animation span {
       position: absolute;
-      width: 3px;
-      height: 3px;
-      background: rgba(255, 220, 150, 0.6);
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
-      box-shadow: 0 0 12px rgba(255, 220, 150, 0.3);
-      animation: float-firefly 8s infinite ease-in-out;
+      animation: float 6s infinite linear;
     }
 
-    @keyframes float-firefly {
-      0%, 100% { transform: translate(0, 0) scale(0.5); opacity: 0.1; }
-      50% { transform: translate(30px, -60px) scale(1); opacity: 0.8; }
+    @keyframes float {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 1;
+      }
     }
 
-    /* ===== ОСНОВНИЙ КОНТЕЙНЕР ===== */
     .container {
       position: relative;
       z-index: 1;
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 30px 20px;
+      padding: 20px;
     }
 
-    /* ===== ХЕДЕР ===== */
+    /* Header */
     .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 0 30px;
-      border-bottom: 1px solid rgba(180, 150, 100, 0.1);
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .logo-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at 30% 30%, #5a7a4a, #2a3a1a);
-      border: 1px solid rgba(180, 150, 100, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      color: #d4c9b8;
-      box-shadow: 0 0 40px rgba(180, 150, 100, 0.05);
-    }
-
-    .logo-text {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #e8dcc8;
-      letter-spacing: 3px;
-    }
-
-    .logo-text span {
-      color: #8a7a5a;
-    }
-
-    .logo-sub {
-      font-size: 0.55rem;
-      color: rgba(180, 150, 100, 0.25);
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      font-weight: 300;
-      margin-top: 2px;
-    }
-
-    /* ===== СТАТУС ===== */
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.7rem;
-      color: rgba(180, 150, 100, 0.25);
-      letter-spacing: 2px;
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(180, 150, 100, 0.05);
-      font-weight: 300;
-    }
-
-    .status-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #5a7a4a;
-      animation: pulse-leaf 3s infinite;
-    }
-
-    @keyframes pulse-leaf {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.7); }
-    }
-
-    /* ===== ГЕРОЙ ===== */
-    .hero {
       text-align: center;
-      padding: 50px 20px 30px;
+      padding: 30px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .hero h1 {
-      font-family: 'Cinzel Decorative', serif;
-      font-size: 3.8rem;
-      font-weight: 700;
-      letter-spacing: 6px;
-      color: #e8dcc8;
-      text-shadow: 0 0 60px rgba(180, 150, 100, 0.05);
+    .header h1 {
+      font-size: 3rem;
+      background: linear-gradient(135deg, #fff, #e50914);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 10px;
     }
 
-    .hero h1 em {
-      font-style: normal;
-      color: #8a7a5a;
+    .header p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 1rem;
     }
 
-    .hero p {
-      font-size: 1.05rem;
-      color: rgba(180, 150, 100, 0.3);
-      margin-top: 16px;
-      letter-spacing: 4px;
-      font-weight: 300;
-    }
-
-    .hero .divider {
-      width: 80px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(180, 150, 100, 0.2), transparent);
-      margin: 24px auto 0;
-    }
-
-    /* ===== КАРТКИ ===== */
+    /* Cards */
     .card {
-      background: rgba(20, 18, 14, 0.6);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 28px 32px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
       margin-bottom: 20px;
-      border: 1px solid rgba(180, 150, 100, 0.05);
-      transition: all 0.5s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .card:hover {
-      border-color: rgba(180, 150, 100, 0.1);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    .card-label {
-      font-size: 0.6rem;
-      font-weight: 300;
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      color: rgba(180, 150, 100, 0.15);
-      margin-bottom: 14px;
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .card-label i {
-      color: #5a7a4a;
-      font-size: 0.7rem;
+    .card-title i {
+      color: #e50914;
+      font-size: 1.3rem;
     }
 
-    /* ===== ІНПУТИ ===== */
+    /* Inputs */
     .input-group {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     input {
       flex: 1;
-      padding: 14px 22px;
-      font-size: 0.95rem;
-      border: 1px solid rgba(180, 150, 100, 0.06);
+      padding: 12px 18px;
+      font-size: 1rem;
+      border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
-      background: rgba(255,255,255,0.02);
-      color: #d4c9b8;
-      transition: all 0.4s;
-      font-family: 'Cormorant Garamond', serif;
-      min-width: 200px;
-      font-weight: 300;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
     }
 
     input:focus {
       outline: none;
-      border-color: rgba(180, 150, 100, 0.15);
-      background: rgba(255,255,255,0.03);
-      box-shadow: 0 0 40px rgba(180, 150, 100, 0.02);
+      border-color: #e50914;
+      background: rgba(255, 255, 255, 0.15);
     }
 
     input::placeholder {
-      color: rgba(180, 150, 100, 0.1);
-      font-weight: 300;
+      color: rgba(255, 255, 255, 0.5);
     }
 
-    /* ===== КНОПКИ ===== */
+    /* Buttons */
     .btn {
-      padding: 14px 32px;
-      font-size: 0.85rem;
-      font-weight: 500;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
       border: none;
       border-radius: 12px;
       cursor: pointer;
-      transition: all 0.4s;
-      font-family: 'Cormorant Garamond', serif;
+      transition: all 0.3s;
+      font-family: 'Inter', sans-serif;
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      white-space: nowrap;
-      letter-spacing: 2px;
+      gap: 8px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #3a4a2a, #2a3a1a);
-      color: #e8dcc8;
-      border: 1px solid rgba(180, 150, 100, 0.05);
+      background: linear-gradient(135deg, #e50914, #ff4757);
+      color: white;
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 40px rgba(40, 60, 30, 0.2);
-      border-color: rgba(180, 150, 100, 0.1);
+      box-shadow: 0 5px 20px rgba(229, 9, 20, 0.4);
     }
 
-    .btn-outline {
-      background: transparent;
-      color: rgba(180, 150, 100, 0.2);
-      border: 1px solid rgba(180, 150, 100, 0.05);
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .btn-outline:hover {
-      border-color: rgba(180, 150, 100, 0.1);
-      color: rgba(180, 150, 100, 0.4);
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
     }
 
-    /* ===== ВІДЕО ===== */
+    /* Video Container */
     .video-wrapper {
       position: relative;
-      border-radius: 16px;
+      background: #000;
+      border-radius: 20px;
       overflow: hidden;
-      background: #0a0806;
-      border: 1px solid rgba(180, 150, 100, 0.05);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-    }
-
-    .video-wrapper::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(180, 150, 100, 0.05), transparent, rgba(180, 150, 100, 0.05));
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
     }
 
     video {
       width: 100%;
       display: block;
-      background: #0a0806;
+      background: black;
     }
 
-    .video-overlay-info {
-      position: absolute;
-      bottom: 16px;
-      left: 20px;
-      font-size: 0.5rem;
-      color: rgba(180, 150, 100, 0.08);
-      letter-spacing: 4px;
-      pointer-events: none;
-      font-family: 'Cinzel Decorative', serif;
-    }
-
-    /* ===== СТАТУС ===== */
-    .status-bar {
-      margin-top: 16px;
-      padding: 14px 20px;
+    /* Status */
+    .status {
+      margin-top: 15px;
+      padding: 12px;
       border-radius: 12px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
-      gap: 12px;
-      background: rgba(20, 18, 14, 0.3);
-      border: 1px solid rgba(180, 150, 100, 0.03);
-      transition: all 0.3s;
-      font-weight: 300;
-    }
-
-    .status-bar .dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .status-bar.success .dot { background: #5a7a4a; }
-    .status-bar.error .dot { background: #8a4a3a; }
-    .status-bar.warning .dot { background: #8a7a3a; }
-    .status-bar.info .dot { background: rgba(180, 150, 100, 0.1); }
-
-    /* ===== ROOM BADGE ===== */
-    .room-badge {
-      display: inline-block;
-      margin-top: 14px;
-      padding: 4px 18px;
-      border-radius: 20px;
-      background: rgba(40, 60, 30, 0.08);
-      border: 1px solid rgba(180, 150, 100, 0.05);
-      font-size: 0.7rem;
-      color: rgba(180, 150, 100, 0.2);
-      letter-spacing: 2px;
-    }
-
-    /* ===== ТЕСТОВИЙ БЛОК ===== */
-    .test-block {
-      margin-top: 16px;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-align: center;
-      font-size: 0.65rem;
-      color: rgba(180, 150, 100, 0.06);
-      font-weight: 300;
-      letter-spacing: 2px;
-    }
-
-    .test-block code {
-      font-family: 'Cormorant Garamond', serif;
-      color: rgba(180, 150, 100, 0.08);
-    }
-
-    /* ===== ФУТЕР ===== */
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 30px 0 20px;
-      margin-top: 40px;
-      border-top: 1px solid rgba(180, 150, 100, 0.03);
-      font-size: 0.65rem;
-      color: rgba(180, 150, 100, 0.06);
-      letter-spacing: 3px;
-      flex-wrap: wrap;
       gap: 10px;
     }
 
-    .footer a {
-      color: rgba(180, 150, 100, 0.08);
-      text-decoration: none;
-      transition: 0.3s;
+    .status i {
+      font-size: 1.1rem;
     }
 
-    .footer a:hover {
-      color: rgba(180, 150, 100, 0.2);
+    .status.success {
+      background: rgba(76, 175, 80, 0.2);
+      border: 1px solid #4caf50;
+      color: #4caf50;
     }
 
-    .footer .social {
-      display: flex;
-      gap: 20px;
+    .status.error {
+      background: rgba(244, 67, 54, 0.2);
+      border: 1px solid #f44336;
+      color: #f44336;
     }
 
-    /* ===== АДАПТИВ ===== */
+    .status.warning {
+      background: rgba(255, 152, 0, 0.2);
+      border: 1px solid #ff9800;
+      color: #ff9800;
+    }
+
+    .status.info {
+      background: rgba(33, 150, 243, 0.2);
+      border: 1px solid #2196f3;
+      color: #2196f3;
+    }
+
+    /* Info Box */
+    .info-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .info-box i {
+      margin: 0 5px;
+    }
+
+    /* Room badge */
+    .room-badge {
+      display: inline-block;
+      background: rgba(229, 9, 20, 0.2);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      color: #e50914;
+      margin-top: 10px;
+    }
+
+    /* Responsive */
     @media (max-width: 768px) {
-      .hero h1 { font-size: 2.2rem; letter-spacing: 4px; }
-      .header { flex-direction: column; align-items: flex-start; }
-      .logo-text { font-size: 1.2rem; }
+      .header h1 { font-size: 2rem; }
       .input-group { flex-direction: column; }
       .btn { justify-content: center; }
-      .card { padding: 20px; }
-      .footer { flex-direction: column; text-align: center; }
-    }
-
-    @media (max-width: 480px) {
-      .hero h1 { font-size: 1.8rem; }
-      .logo-icon { width: 40px; height: 40px; font-size: 1rem; }
+      .card { padding: 15px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== ФОН ===== -->
-<div class="bg-forest"></div>
-<div class="forest-canopy"></div>
+<div class="bg-animation" id="bgAnimation"></div>
 
-<!-- ===== СВІТЛЯЧКИ ===== -->
-<div class="fireflies" id="fireflies"></div>
-
-<!-- ===== ОСНОВНИЙ КОНТЕЙНЕР ===== -->
 <div class="container">
-
-  <!-- ===== ХЕДЕР ===== -->
-  <header class="header">
-    <div class="logo">
-      <div class="logo-icon"><i class="fas fa-leaf"></i></div>
-      <div>
-        <div class="logo-text">Woodland <span>Cinema</span></div>
-        <div class="logo-sub">✦ among the ancient trees</div>
-      </div>
-    </div>
-    <div class="status-indicator">
-      <span class="status-dot"></span>
-      <span>the forest hears</span>
-    </div>
-  </header>
-
-  <!-- ===== ГЕРОЙ ===== -->
-  <div class="hero">
-    <h1>watch <em>together</em></h1>
-    <p>gather beneath the canopy & share the stories of the silver screen</p>
-    <div class="divider"></div>
+  <div class="header">
+    <h1><i class="fas fa-film"></i> Watch Party</h1>
+    <p>Дивись фільми та серіали разом з друзями</p>
   </div>
 
-  <!-- ===== КІМНАТА ===== -->
   <div class="card">
-    <div class="card-label">
-      <i class="fas fa-door-open"></i> the gathering
+    <div class="card-title">
+      <i class="fas fa-door-open"></i>
+      <span>Кімната</span>
     </div>
     <div class="input-group">
-      <input type="text" id="room" placeholder="name of the glade">
+      <input type="text" id="room" placeholder="Назва кімнати (наприклад: anime-night)">
       <button class="btn btn-primary" onclick="joinRoom()">
-        <i class="fas fa-sign-in-alt"></i> enter
+        <i class="fas fa-sign-in-alt"></i> Join
       </button>
     </div>
     <div id="roomDisplay" class="room-badge" style="display: none;"></div>
   </div>
 
-  <!-- ===== ВІДЕО ===== -->
   <div class="card">
-    <div class="card-label">
-      <i class="fas fa-link"></i> the tale
+    <div class="card-title">
+      <i class="fas fa-link"></i>
+      <span>Відео</span>
     </div>
     <div class="input-group">
-      <input type="text" id="videoUrl" placeholder="path to the .mp4">
+      <input type="text" id="videoUrl" placeholder="Посилання на .mp4 відео">
       <button class="btn btn-primary" onclick="setVideo()">
-        <i class="fas fa-play"></i> unfold
+        <i class="fas fa-play"></i> Load
       </button>
     </div>
   </div>
 
-  <!-- ===== ПЛЕЄР ===== -->
   <div class="video-wrapper">
     <video id="video" controls></video>
-    <div class="video-overlay-info">✦ now unfolding</div>
   </div>
 
-  <!-- ===== СТАТУС ===== -->
-  <div id="status" class="status-bar info">
-    <span class="dot"></span>
-    <span>awaiting the story</span>
+  <div id="status" class="status info">
+    <i class="fas fa-info-circle"></i>
+    <span>Готовий до роботи</span>
   </div>
 
-  <!-- ===== ТЕСТОВИЙ БЛОК ===== -->
-  <div class="test-block">
-    <i class="fas fa-flask" style="margin-right: 6px;"></i>
-    test: <code>https://www.w3schools.com/html/mov_bbb.mp4</code>
+  <div class="info-box">
+    <i class="fas fa-users"></i> 1️⃣ Введіть назву кімнати → Join &nbsp;&nbsp;|&nbsp;&nbsp;
+    <i class="fas fa-video"></i> 2️⃣ Вставте .mp4 посилання → Load &nbsp;&nbsp;|&nbsp;&nbsp;
+    <i class="fas fa-share-alt"></i> 3️⃣ Дайте другу URL та назву кімнати
+    <br><br>
+    <i class="fas fa-flask"></i> Тестове відео: 
+    <code style="background: rgba(255,255,255,0.1); padding: 2px 6px; border-radius: 6px;">https://www.w3schools.com/html/mov_bbb.mp4</code>
   </div>
-
-  <!-- ===== ФУТЕР ===== -->
-  <footer class="footer">
-    <span>✦ in the heart of the forest</span>
-    <div class="social">
-      <a href="#">whispers</a>
-      <a href="#">legends</a>
-    </div>
-  </footer>
 </div>
 
-<!-- ===== FIREBASE ===== -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
 <script>
-// ===== СВІТЛЯЧКИ =====
-function createFireflies() {
-  const container = document.getElementById('fireflies');
-  for (let i = 0; i < 30; i++) {
-    const firefly = document.createElement('div');
-    firefly.className = 'firefly';
-    firefly.style.left = Math.random() * 100 + '%';
-    firefly.style.top = Math.random() * 100 + '%';
-    firefly.style.animationDelay = Math.random() * 8 + 's';
-    firefly.style.animationDuration = 6 + Math.random() * 6 + 's';
-    firefly.style.width = (2 + Math.random() * 3) + 'px';
-    firefly.style.height = firefly.style.width;
-    container.appendChild(firefly);
+// Анімація фону
+function createStars() {
+  const bg = document.getElementById('bgAnimation');
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('span');
+    star.style.left = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 6 + 's';
+    star.style.animationDuration = 3 + Math.random() * 4 + 's';
+    star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+    bg.appendChild(star);
   }
 }
-createFireflies();
+createStars();
 
-// ===== FIREBASE =====
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDEqsA1VXrjLyTixw-urcIyhco_x56kVtw",
   authDomain: "watch2-7672f.firebaseapp.com",
@@ -584,24 +364,25 @@ const db = firebase.database();
 let roomRef = null;
 let isUpdating = false;
 const video = document.getElementById("video");
-const statusEl = document.getElementById("status");
+const statusDiv = document.getElementById("status");
+const roomDisplay = document.getElementById("roomDisplay");
 
 function updateStatus(message, type = "info") {
-  const dotColors = {
-    success: '#5a7a4a',
-    error: '#8a4a3a',
-    warning: '#8a7a3a',
-    info: 'rgba(180, 150, 100, 0.1)'
+  const icon = {
+    success: 'fa-check-circle',
+    error: 'fa-exclamation-circle',
+    warning: 'fa-exclamation-triangle',
+    info: 'fa-info-circle'
   };
-  statusEl.innerHTML = `<span class="dot" style="background:${dotColors[type] || dotColors.info};"></span><span>${message}</span>`;
-  statusEl.className = `status-bar ${type}`;
+  statusDiv.innerHTML = `<i class="fas ${icon[type]}"></i><span>${message}</span>`;
+  statusDiv.className = `status ${type}`;
   console.log(`[${type}] ${message}`);
 }
 
 window.joinRoom = function() {
   const room = document.getElementById("room").value.trim();
   if (!room) {
-    updateStatus("a glade must have a name...", "error");
+    updateStatus("Введіть назву кімнати!", "error");
     return;
   }
   
@@ -614,19 +395,19 @@ window.joinRoom = function() {
     console.log("Отримано:", data);
     
     if (!data) {
-      updateStatus(`the glade "${room}" awaits a tale`, "warning");
+      updateStatus(`Кімната "${room}" порожня. Завантажте відео.`, "warning");
       return;
     }
     
-    updateStatus(`gathered in: ${room}`, "success");
-    document.getElementById("roomDisplay").style.display = "inline-block";
-    document.getElementById("roomDisplay").innerHTML = `<i class="fas fa-leaf"></i> ${room}`;
+    updateStatus(`В кімнаті: ${room}`, "success");
+    roomDisplay.style.display = "inline-block";
+    roomDisplay.innerHTML = `<i class="fas fa-hashtag"></i> ${room}`;
     isUpdating = true;
     
     if (data.video && video.src !== data.video) {
       video.src = data.video;
       video.load();
-      updateStatus("the story unfolds", "success");
+      updateStatus("Відео завантажено", "success");
     }
     
     if (data.time !== undefined && Math.abs(video.currentTime - data.time) > 1) {
@@ -634,7 +415,7 @@ window.joinRoom = function() {
     }
     
     if (data.playing) {
-      video.play().catch(() => updateStatus("touch the story to begin", "warning"));
+      video.play().catch(() => updateStatus("Натисніть Play на відео", "warning"));
     } else {
       video.pause();
     }
@@ -642,31 +423,31 @@ window.joinRoom = function() {
     isUpdating = false;
   });
   
-  updateStatus(`entered the glade "${room}"`, "success");
+  updateStatus(`Приєднано до "${room}"`, "success");
 };
 
 window.setVideo = function() {
   if (!roomRef) {
-    updateStatus("first, enter a glade", "error");
+    updateStatus("Спочатку натисніть Join!", "error");
     return;
   }
   
   const url = document.getElementById("videoUrl").value.trim();
   if (!url) {
-    updateStatus("a tale must be chosen", "error");
+    updateStatus("Вставте посилання на відео!", "error");
     return;
   }
   
-  updateStatus("sharing the tale...", "info");
+  updateStatus("Відправка...", "info");
   
   roomRef.set({
     video: url,
     time: 0,
     playing: false
   }).then(() => {
-    updateStatus("the tale has been shared!", "success");
+    updateStatus("Відео відправлено!", "success");
   }).catch((error) => {
-    updateStatus(`error: ${error.message}`, "error");
+    updateStatus(`Помилка: ${error.message}`, "error");
   });
 };
 
@@ -688,7 +469,7 @@ video.addEventListener("seeked", () => {
   }
 });
 
-updateStatus("the forest is listening...", "info");
+updateStatus("Готово! Введіть кімнату", "success");
 </script>
 
 </body>
